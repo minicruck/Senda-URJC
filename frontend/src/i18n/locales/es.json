@@ -22,8 +22,60 @@
   },
   "route": {
     "heading": "Solicitar una ruta",
-    "placeholder": "La selección de origen y destino se implementará en la siguiente iteración.",
-    "backHome": "Volver al inicio"
+    "instructions": "Elige origen y destino dentro del perímetro marcado (500 m alrededor de cada campus de la URJC).",
+    "origin": {
+      "label": "Origen",
+      "placeholder": "Escribe una dirección o haz click en el mapa"
+    },
+    "destination": {
+      "label": "Destino",
+      "placeholder": "Escribe una dirección o haz click en el mapa"
+    },
+    "clear": "Quitar",
+    "searching": "Buscando direcciones…",
+    "useCurrentLocation": "Usar mi ubicación actual",
+    "coordsShort": "Lat {{lat}}, Lng {{lng}}",
+    "computeCta": "Calcular ruta",
+    "recomputeCta": "Recalcular rutas",
+    "toggle": {
+      "heading": "El próximo click en el mapa colocará…",
+      "placeOrigin": "Origen",
+      "placeDestination": "Destino"
+    },
+    "map": {
+      "label": "Mapa de selección de ruta"
+    },
+    "list": {
+      "heading": "Rutas propuestas",
+      "empty": "Indica origen y destino, y pulsa «Calcular ruta».",
+      "choose": "Elegir esta ruta",
+      "selected": "Ruta seleccionada"
+    },
+    "labels": {
+      "principal": "Principal",
+      "alternative1": "Alternativa 1",
+      "alternative2": "Alternativa 2"
+    },
+    "safety": {
+      "high": "Alto",
+      "medium": "Medio",
+      "low": "Bajo"
+    },
+    "metrics": {
+      "isp": "ISP",
+      "distance": "Distancia",
+      "distanceValue": "{{value}} km",
+      "duration": "Tiempo",
+      "durationValue": "{{value}} min"
+    }
+  },
+  "errors": {
+    "outOfCoverage": "El punto está fuera del perímetro de cobertura (500 m alrededor de los campus de la URJC).",
+    "missingEndpoints": "Necesitas indicar origen y destino antes de calcular la ruta.",
+    "geocoding": "No se pudieron obtener sugerencias de direcciones. Inténtalo de nuevo.",
+    "geolocationUnavailable": "Tu dispositivo no permite obtener la ubicación.",
+    "geolocationDenied": "Has denegado el acceso a la ubicación.",
+    "geolocationFailed": "No se pudo obtener tu ubicación. Inténtalo otra vez."
   },
   "language": {
     "switchTo": "Cambiar idioma"

@@ -22,8 +22,60 @@
   },
   "route": {
     "heading": "Request a route",
-    "placeholder": "Origin and destination selection will ship in the next iteration.",
-    "backHome": "Back to home"
+    "instructions": "Pick origin and destination inside the highlighted perimeter (500 m around each URJC campus).",
+    "origin": {
+      "label": "Origin",
+      "placeholder": "Type an address or click on the map"
+    },
+    "destination": {
+      "label": "Destination",
+      "placeholder": "Type an address or click on the map"
+    },
+    "clear": "Clear",
+    "searching": "Searching addresses…",
+    "useCurrentLocation": "Use my current location",
+    "coordsShort": "Lat {{lat}}, Lng {{lng}}",
+    "computeCta": "Calculate route",
+    "recomputeCta": "Recalculate routes",
+    "toggle": {
+      "heading": "Next map click will place…",
+      "placeOrigin": "Origin",
+      "placeDestination": "Destination"
+    },
+    "map": {
+      "label": "Route planning map"
+    },
+    "list": {
+      "heading": "Proposed routes",
+      "empty": "Set origin and destination, then tap «Calculate route».",
+      "choose": "Choose this route",
+      "selected": "Route selected"
+    },
+    "labels": {
+      "principal": "Main",
+      "alternative1": "Alternative 1",
+      "alternative2": "Alternative 2"
+    },
+    "safety": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "metrics": {
+      "isp": "PSI",
+      "distance": "Distance",
+      "distanceValue": "{{value}} km",
+      "duration": "Time",
+      "durationValue": "{{value}} min"
+    }
+  },
+  "errors": {
+    "outOfCoverage": "That point is outside the coverage perimeter (500 m around the URJC campuses).",
+    "missingEndpoints": "You need both origin and destination before calculating a route.",
+    "geocoding": "Address suggestions could not be fetched. Try again.",
+    "geolocationUnavailable": "Your device does not support geolocation.",
+    "geolocationDenied": "Location access was denied.",
+    "geolocationFailed": "Could not retrieve your location. Try again."
   },
   "language": {
     "switchTo": "Change language"
