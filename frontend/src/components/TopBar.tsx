@@ -2,10 +2,29 @@ import { Link, NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth/AuthContext";
 import LanguageSwitcher from "./LanguageSwitcher";
+import RoleBadge from "./RoleBadge";
+import type { Role } from "../types/incidents";
+
+interface NavItem {
+  to: string;
+  key: string;
+}
+
+const NAV_BY_ROLE: Record<Role, NavItem[]> = {
+  user: [
+    { to: "/", key: "nav.home" },
+    { to: "/profile", key: "nav.profile" },
+    { to: "/incidents/new", key: "nav.reportIncident" },
+  ],
+  admin: [{ to: "/admin", key: "nav.admin" }],
+  security: [{ to: "/security", key: "nav.securityService" }],
+  maintenance: [{ to: "/maintenance", key: "nav.maintenanceService" }],
+};
 
 export default function TopBar() {
   const { t } = useTranslation();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
+  const navItems: NavItem[] = user ? NAV_BY_ROLE[user.role] : [];
 
   return (
     <header className="bg-urjc-red text-white shadow">
@@ -23,18 +42,34 @@ export default function TopBar() {
           <span className="hidden sm:inline">{t("app.title")}</span>
         </Link>
 
-        <div className="flex items-center gap-2">
-          {isAuthenticated && (
+        <nav
+          className="hidden flex-1 items-center justify-center gap-1 md:flex"
+          aria-label={t("nav.primary")}
+        >
+          {navItems.map((item: NavItem) => (
             <NavLink
-              to="/profile"
+              key={item.to}
+              to={item.to}
+              end={item.to === "/"}
               className={({ isActive }) =>
-                `min-h-tap hidden rounded px-3 py-2 text-sm font-semibold hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white sm:inline-flex sm:items-center ${
+                `min-h-tap rounded px-3 py-2 text-sm font-semibold hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                   isActive ? "bg-white text-urjc-red" : "text-white"
                 }`
               }
             >
-              {t("nav.profile")}
+              {t(item.key)}
             </NavLink>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-2">
+          {user && (
+            <div className="hidden items-center gap-2 text-xs sm:flex">
+              <span className="max-w-[10rem] truncate text-white/90">
+                {user.displayName}
+              </span>
+              <RoleBadge role={user.role} variant="inverted" />
+            </div>
           )}
           <LanguageSwitcher />
           {isAuthenticated && (
@@ -48,6 +83,30 @@ export default function TopBar() {
           )}
         </div>
       </div>
+
+      {navItems.length > 0 && (
+        <nav
+          className="flex overflow-x-auto border-t border-white/20 md:hidden"
+          aria-label={t("nav.primary")}
+        >
+          {navItems.map((item: NavItem) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.to === "/"}
+              className={({ isActive }) =>
+                `min-h-tap flex-1 whitespace-nowrap px-3 py-2 text-center text-xs font-semibold ${
+                  isActive
+                    ? "bg-white text-urjc-red"
+                    : "text-white/90 hover:bg-white/10"
+                }`
+              }
+            >
+              {t(item.key)}
+            </NavLink>
+          ))}
+        </nav>
+      )}
     </header>
   );
 }

@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth/AuthContext";
+import RoleLoginPanel from "../components/RoleLoginPanel";
+import type { Role } from "../types/incidents";
+import { rolePath } from "../types/incidents";
 
 interface LocationState {
   from?: { pathname: string };
@@ -9,22 +12,40 @@ interface LocationState {
 
 export default function LoginPage() {
   const { t } = useTranslation();
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated, user, login, loginAs } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+  if (isAuthenticated && user) {
+    const state = location.state as LocationState | null;
+    const fallback = rolePath(user.role);
+    const destination = state?.from?.pathname ?? fallback;
+    return <Navigate to={destination} replace />;
   }
+
+  const redirectAfterLogin = (role: Role): void => {
+    const state = location.state as LocationState | null;
+    const fallback = rolePath(role);
+    const destination = state?.from?.pathname ?? fallback;
+    navigate(destination, { replace: true });
+  };
 
   const handleLogin = async (): Promise<void> => {
     setLoading(true);
     try {
       await login();
-      const state = location.state as LocationState | null;
-      const redirectTo = state?.from?.pathname ?? "/";
-      navigate(redirectTo, { replace: true });
+      redirectAfterLogin("user");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRoleLogin = async (role: Role): Promise<void> => {
+    setLoading(true);
+    try {
+      await loginAs(role);
+      redirectAfterLogin(role);
     } finally {
       setLoading(false);
     }
@@ -48,9 +69,11 @@ export default function LoginPage() {
           {loading ? t("login.loading") : t("login.button")}
         </button>
 
-        <p className="mt-6 text-center text-xs text-gray-500">
+        <p className="mt-4 text-center text-xs text-gray-500">
           {t("login.mockNotice")}
         </p>
+
+        <RoleLoginPanel onLoginAs={handleRoleLogin} disabled={loading} />
       </div>
     </section>
   );

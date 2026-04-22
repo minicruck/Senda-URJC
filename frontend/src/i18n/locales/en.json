@@ -4,17 +4,38 @@
     "tagline": "Safe routes across URJC campuses"
   },
   "nav": {
+    "primary": "Main navigation",
     "home": "Home",
     "requestRoute": "Request route",
     "profile": "Profile",
+    "reportIncident": "Report incident",
+    "admin": "Administration",
+    "securityService": "Security Service",
+    "maintenanceService": "Maintenance Service",
     "logout": "Sign out"
+  },
+  "roles": {
+    "user": "User",
+    "admin": "Admin",
+    "security": "Security",
+    "maintenance": "Maintenance"
   },
   "login": {
     "heading": "Sign in",
     "description": "Sign in with your URJC institutional credentials.",
     "button": "Sign in with URJC SSO",
     "loading": "Signing in…",
-    "mockNotice": "Academic prototype: SSO mocked locally."
+    "mockNotice": "Academic prototype: SSO mocked locally.",
+    "roles": {
+      "heading": "Sign in as a test role",
+      "description": "Prototype only: each button opens a session with a mocked user of the given role.",
+      "as": {
+        "user": "End user",
+        "admin": "Administrator",
+        "security": "Security Service",
+        "maintenance": "Maintenance Service"
+      }
+    }
   },
   "home": {
     "welcome": "Hi, {{name}}",
@@ -74,7 +95,7 @@
     "startTripCta": "Start trip",
     "picker": {
       "title": "Pick a companion",
-      "subtitle": "The person you pick will receive your real-time location while the trip is active («Voy contigo» mode).",
+      "subtitle": "The person you pick will receive your real-time location while the trip is active.",
       "contactsHeading": "Trusted contacts",
       "volunteersHeading": "Volunteers",
       "noContacts": "You don't have any trusted contacts yet. Add some in Profile.",
@@ -103,7 +124,7 @@
       "simulatedPauseActive": "Simulated pause: {{seconds}} s of {{threshold}} s before prealert.",
       "confirmCancel": {
         "title": "Cancel this trip?",
-        "message": "«Voy contigo» will be closed and location sharing with your companion will stop.",
+        "message": "Companion mode will be closed and location sharing will stop.",
         "yes": "Yes, cancel",
         "no": "Keep going"
       }
@@ -136,6 +157,7 @@
       "reasonPause": "Reason: extended pause.",
       "reasonDeviation": "Reason: off-route deviation.",
       "reasonManual": "Reason: manually requested prealert.",
+      "reasonTimeout": "Reason: confirmation window expired.",
       "countdownLabel": "s remaining",
       "imOk": "I'm okay",
       "askHelp": "Ask for help now"
@@ -150,7 +172,7 @@
     },
     "security": {
       "heading": "Security Service panel (simulated)",
-      "description": "Data received with the alert (RF-32).",
+      "description": "Data received with the alert.",
       "user": "User",
       "email": "Email",
       "reason": "Reason",
@@ -187,7 +209,7 @@
     },
     "thresholds": {
       "heading": "Prealert thresholds",
-      "description": "Tune when the app detects a possible incident during a trip (RF-29).",
+      "description": "Tune when the app detects a possible incident during a trip.",
       "pause": {
         "label": "Max pause time",
         "description": "How long you can stay still before it's considered an incident."
@@ -204,12 +226,121 @@
       "heading": "Volunteering",
       "description": "Offer to virtually accompany other people during their trips.",
       "active": "You are registered as a volunteer",
-      "activeDescription": "Others can now pick you as a companion when starting «Voy contigo».",
+      "activeDescription": "Others can now pick you as a companion when starting companion mode.",
       "inactive": "You are not registered",
       "inactiveDescription": "Enable volunteering to appear in the list of available companions.",
       "toggleOn": "Register",
       "toggleOff": "Unregister"
     }
+  },
+  "incident": {
+    "categoryHeading": "Incident type",
+    "categories": {
+      "lighting": {
+        "label": "Broken streetlight",
+        "hint": "Lamp off, faulty or providing insufficient light."
+      },
+      "feeling": {
+        "label": "Lonely / fear zone",
+        "hint": "Feeling of insecurity, low footfall or isolated spot."
+      },
+      "obstacle": {
+        "label": "Obstacle on the path",
+        "hint": "Objects, vegetation or elements blocking the way."
+      },
+      "accessibility": {
+        "label": "Accessibility barrier",
+        "hint": "Step, broken pavement or other accessibility issue."
+      }
+    },
+    "descriptionLabel": "Description (optional)",
+    "descriptionPlaceholder": "Any detail that could help staff locate and fix the incident.",
+    "charsRemaining": "{{value}} chars left",
+    "locationLabel": "Location",
+    "cancel": "Cancel",
+    "submit": "Submit incident",
+    "modal": {
+      "title": "Report an incident",
+      "subtitle": "Thanks for helping improve campus safety."
+    },
+    "page": {
+      "heading": "Report an incident",
+      "description": "Pick a point on the map or use your current location and continue with the form.",
+      "mapLabel": "Map to select the incident location",
+      "pickHint": "Click the map to choose the incident location.",
+      "selectedLocation": "Selected location: {{lat}}, {{lng}}",
+      "continue": "Continue",
+      "success": "Incident reported. Thanks for helping improve campus safety."
+    },
+    "fab": {
+      "label": "Report an incident during the trip"
+    },
+    "errors": {
+      "missingCategory": "Pick an incident type to continue."
+    }
+  },
+  "tickets": {
+    "status": {
+      "open": "Open",
+      "assigned_security": "Assigned to Security",
+      "assigned_maintenance": "Assigned to Maintenance",
+      "closed": "Closed"
+    },
+    "actions": {
+      "assignSecurity": "Assign to Security",
+      "assignMaintenance": "Assign to Maintenance",
+      "close": "Close",
+      "confirmClose": "Confirm close"
+    },
+    "byAuthor": "Reported by {{name}} ({{email}})",
+    "noDescription": "No description",
+    "resolutionNote": "Resolution note",
+    "closeNoteLabel": "Resolution note (optional)"
+  },
+  "alerts": {
+    "status": {
+      "active": "Active",
+      "resolved": "Resolved"
+    },
+    "reason": "Reason",
+    "reasons": {
+      "pause": "Extended pause",
+      "deviation": "Route deviation",
+      "manual": "Manual prealert",
+      "timeout": "Timeout expired"
+    },
+    "triggeredAt": "Time",
+    "recipient": "Companion",
+    "noRecipient": "No companion",
+    "location": "Location",
+    "actions": {
+      "resolve": "Mark as resolved"
+    }
+  },
+  "admin": {
+    "heading": "Administration panel",
+    "description": "Management of reported incidents and escalated alerts.",
+    "tabsLabel": "Panel sections",
+    "tabs": {
+      "tickets": "Tickets ({{count}})",
+      "alerts": "Alerts ({{count}})"
+    },
+    "noTickets": "No incidents registered.",
+    "noAlerts": "No escalated alerts."
+  },
+  "security": {
+    "heading": "Security Service panel",
+    "description": "Received alerts and security tickets forwarded by admin.",
+    "alertsHeading": "Active alerts ({{count}})",
+    "ticketsHeading": "Assigned tickets ({{count}})",
+    "noAlerts": "No active alerts.",
+    "noTickets": "No tickets assigned to the Security Service."
+  },
+  "maintenance": {
+    "heading": "Maintenance Service panel",
+    "description": "Maintenance tickets forwarded by admin.",
+    "ticketsHeading": "Assigned tickets ({{count}})",
+    "noTickets": "No tickets assigned to the Maintenance Service."
   },
   "errors": {
     "outOfCoverage": "That point is outside the coverage perimeter (500 m around the URJC campuses).",

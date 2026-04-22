@@ -32,6 +32,8 @@ function RouteRequestScreen() {
   const {
     origin,
     destination,
+    originLabel,
+    destinationLabel,
     nextEndpoint,
     routes,
     activeRouteId,
@@ -115,7 +117,8 @@ function RouteRequestScreen() {
         <AddressSearchInput
           kind={"origin" as EndpointKind}
           value={origin}
-          onSelect={(s) => setEndpoint("origin", s.point)}
+          externalLabel={originLabel}
+          onSelect={(s) => setEndpoint("origin", s.point, s.displayName)}
           onClear={() => clearEndpoint("origin")}
           onRequestUseCurrentLocation={handleUseCurrentLocation}
           geolocating={geolocating}
@@ -124,7 +127,8 @@ function RouteRequestScreen() {
         <AddressSearchInput
           kind={"destination" as EndpointKind}
           value={destination}
-          onSelect={(s) => setEndpoint("destination", s.point)}
+          externalLabel={destinationLabel}
+          onSelect={(s) => setEndpoint("destination", s.point, s.displayName)}
           onClear={() => clearEndpoint("destination")}
         />
 

@@ -6,6 +6,8 @@ import { searchAddress } from "../services/geocoding";
 export interface AddressSearchInputProps {
   kind: EndpointKind;
   value: LatLng | null;
+  /** Label pushed from the parent (from reverse-geocode or picked suggestion). */
+  externalLabel?: string | null;
   onSelect: (suggestion: GeocodeSuggestion) => void;
   onClear: () => void;
   onRequestUseCurrentLocation?: () => void;
@@ -15,7 +17,6 @@ export interface AddressSearchInputProps {
 const DEBOUNCE_MS = 400;
 const MIN_CHARS = 3;
 
-// Inline SVG pin used in the "use current location" button.
 const LOCATION_ICON_SVG = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -32,6 +33,7 @@ const LOCATION_ICON_SVG = (
 export default function AddressSearchInput({
   kind,
   value,
+  externalLabel,
   onSelect,
   onClear,
   onRequestUseCurrentLocation,
@@ -41,22 +43,31 @@ export default function AddressSearchInput({
   const inputId = useId();
   const listId = `${inputId}-list`;
 
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState<string>("");
   const [suggestions, setSuggestions] = useState<GeocodeSuggestion[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [errorKey, setErrorKey] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
   const abortRef = useRef<AbortController | null>(null);
 
+  // Track the last externalLabel applied so we don't fight user typing.
+  const lastExternalLabelRef = useRef<string | null | undefined>(undefined);
   useEffect(() => {
-    if (query.trim().length < MIN_CHARS) {
+    if (externalLabel !== lastExternalLabelRef.current) {
+      lastExternalLabelRef.current = externalLabel;
+      if (externalLabel) setQuery(externalLabel);
+      else if (externalLabel === null && !value) setQuery("");
+    }
+  }, [externalLabel, value]);
+
+  useEffect(() => {
+    if (query.trim().length < MIN_CHARS || query === externalLabel) {
       setSuggestions([]);
       setLoading(false);
       setErrorKey(null);
       abortRef.current?.abort();
       return undefined;
     }
-
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -68,7 +79,7 @@ export default function AddressSearchInput({
         signal: controller.signal,
         language: i18n.resolvedLanguage,
       })
-        .then((results) => {
+        .then((results: GeocodeSuggestion[]) => {
           if (controller.signal.aborted) return;
           setSuggestions(results);
           setOpen(true);
@@ -86,7 +97,7 @@ export default function AddressSearchInput({
       window.clearTimeout(timer);
       controller.abort();
     };
-  }, [query, i18n.resolvedLanguage]);
+  }, [query, externalLabel, i18n.resolvedLanguage]);
 
   const handlePick = (suggestion: GeocodeSuggestion): void => {
     onSelect(suggestion);
@@ -107,6 +118,13 @@ export default function AddressSearchInput({
     kind === "origin"
       ? t("route.origin.placeholder")
       : t("route.destination.placeholder");
+
+  const coordsHint: string | null = value
+    ? t("route.coordsShort", {
+        lat: value.lat.toFixed(5),
+        lng: value.lng.toFixed(5),
+      })
+    : null;
 
   return (
     <div className="flex flex-col gap-1">
@@ -140,14 +158,13 @@ export default function AddressSearchInput({
               ×
             </button>
           )}
-
           {open && suggestions.length > 0 && (
             <ul
               id={listId}
               role="listbox"
               className="absolute left-0 right-0 top-full z-[1500] mt-1 max-h-64 overflow-auto rounded border border-gray-200 bg-white shadow-lg"
             >
-              {suggestions.map((s) => (
+              {suggestions.map((s: GeocodeSuggestion) => (
                 <li key={s.id} role="option" aria-selected="false">
                   <button
                     type="button"
@@ -184,13 +201,8 @@ export default function AddressSearchInput({
         {!loading && errorKey && (
           <span className="text-red-600">{t(errorKey)}</span>
         )}
-        {!loading && !errorKey && value && (
-          <span className="text-gray-500">
-            {t("route.coordsShort", {
-              lat: value.lat.toFixed(5),
-              lng: value.lng.toFixed(5),
-            })}
-          </span>
+        {!loading && !errorKey && coordsHint && (
+          <span className="text-gray-500">{coordsHint}</span>
         )}
       </div>
     </div>

@@ -4,17 +4,38 @@
     "tagline": "Rutas seguras por los campus de la URJC"
   },
   "nav": {
+    "primary": "Navegación principal",
     "home": "Inicio",
     "requestRoute": "Solicitar ruta",
     "profile": "Perfil",
+    "reportIncident": "Reportar incidencia",
+    "admin": "Administración",
+    "securityService": "Servicio de Seguridad",
+    "maintenanceService": "Servicio de Mantenimiento",
     "logout": "Cerrar sesión"
+  },
+  "roles": {
+    "user": "Usuaria",
+    "admin": "Administración",
+    "security": "Seguridad",
+    "maintenance": "Mantenimiento"
   },
   "login": {
     "heading": "Inicia sesión",
     "description": "Accede con tus credenciales institucionales de la URJC.",
     "button": "Iniciar sesión con SSO URJC",
     "loading": "Autenticando…",
-    "mockNotice": "Prototipo académico: SSO simulado en local."
+    "mockNotice": "Prototipo académico: SSO simulado en local.",
+    "roles": {
+      "heading": "Iniciar sesión como rol de prueba",
+      "description": "Solo para el prototipo: cada botón abre una sesión con un usuario mock del rol indicado.",
+      "as": {
+        "user": "Persona usuaria",
+        "admin": "Personal administrador",
+        "security": "Servicio de Seguridad",
+        "maintenance": "Servicio de Mantenimiento"
+      }
+    }
   },
   "home": {
     "welcome": "Hola, {{name}}",
@@ -136,6 +157,7 @@
       "reasonPause": "Motivo: parada prolongada.",
       "reasonDeviation": "Motivo: desvío respecto a la ruta.",
       "reasonManual": "Motivo: prealerta solicitada manualmente.",
+      "reasonTimeout": "Motivo: plazo de confirmación agotado.",
       "countdownLabel": "s restantes",
       "imOk": "Estoy bien",
       "askHelp": "Pedir ayuda ahora"
@@ -150,7 +172,7 @@
     },
     "security": {
       "heading": "Panel Servicio de Seguridad (simulado)",
-      "description": "Datos recibidos con la alerta (RF-32).",
+      "description": "Datos recibidos con la alerta.",
       "user": "Usuaria",
       "email": "Correo",
       "reason": "Motivo",
@@ -187,7 +209,7 @@
     },
     "thresholds": {
       "heading": "Umbrales de prealerta",
-      "description": "Ajusta cuándo la aplicación detecta una posible incidencia durante un trayecto (RF-29).",
+      "description": "Ajusta cuándo la aplicación detecta una posible incidencia durante un trayecto.",
       "pause": {
         "label": "Tiempo de parada máximo",
         "description": "Duración de una parada sin avanzar antes de considerar incidencia."
@@ -210,6 +232,115 @@
       "toggleOn": "Darme de alta",
       "toggleOff": "Darme de baja"
     }
+  },
+  "incident": {
+    "categoryHeading": "Tipo de incidencia",
+    "categories": {
+      "lighting": {
+        "label": "Farola fundida",
+        "hint": "Luminaria apagada, averiada o con iluminación insuficiente."
+      },
+      "feeling": {
+        "label": "Zona solitaria / miedo",
+        "hint": "Sensación de inseguridad, poca afluencia o zona aislada."
+      },
+      "obstacle": {
+        "label": "Obstáculo en la vía",
+        "hint": "Objetos, vegetación o elementos que dificultan el paso."
+      },
+      "accessibility": {
+        "label": "Punto con dificultad",
+        "hint": "Barrera de accesibilidad, escalón, firme en mal estado."
+      }
+    },
+    "descriptionLabel": "Descripción (opcional)",
+    "descriptionPlaceholder": "Añade cualquier detalle que pueda ayudar al personal a localizar y resolver la incidencia.",
+    "charsRemaining": "{{value}} caracteres restantes",
+    "locationLabel": "Ubicación",
+    "cancel": "Cancelar",
+    "submit": "Enviar incidencia",
+    "modal": {
+      "title": "Reportar una incidencia",
+      "subtitle": "Gracias por ayudar a mejorar la seguridad del campus."
+    },
+    "page": {
+      "heading": "Reportar una incidencia",
+      "description": "Selecciona un punto en el mapa o usa tu ubicación actual y continúa con el formulario.",
+      "mapLabel": "Mapa para seleccionar la ubicación de la incidencia",
+      "pickHint": "Haz click en el mapa para elegir la ubicación de la incidencia.",
+      "selectedLocation": "Ubicación seleccionada: {{lat}}, {{lng}}",
+      "continue": "Continuar",
+      "success": "Incidencia registrada. Gracias por ayudar a mejorar la seguridad del campus."
+    },
+    "fab": {
+      "label": "Reportar una incidencia durante el trayecto"
+    },
+    "errors": {
+      "missingCategory": "Selecciona un tipo de incidencia para continuar."
+    }
+  },
+  "tickets": {
+    "status": {
+      "open": "Abierta",
+      "assigned_security": "Asignada a Seguridad",
+      "assigned_maintenance": "Asignada a Mantenimiento",
+      "closed": "Cerrada"
+    },
+    "actions": {
+      "assignSecurity": "Derivar a Seguridad",
+      "assignMaintenance": "Derivar a Mantenimiento",
+      "close": "Cerrar",
+      "confirmClose": "Confirmar cierre"
+    },
+    "byAuthor": "Reportada por {{name}} ({{email}})",
+    "noDescription": "Sin descripción",
+    "resolutionNote": "Nota de resolución",
+    "closeNoteLabel": "Nota de resolución (opcional)"
+  },
+  "alerts": {
+    "status": {
+      "active": "Activa",
+      "resolved": "Atendida"
+    },
+    "reason": "Motivo",
+    "reasons": {
+      "pause": "Parada prolongada",
+      "deviation": "Desvío de ruta",
+      "manual": "Prealerta manual",
+      "timeout": "Plazo agotado"
+    },
+    "triggeredAt": "Hora",
+    "recipient": "Acompañante",
+    "noRecipient": "Sin acompañante",
+    "location": "Ubicación",
+    "actions": {
+      "resolve": "Marcar como atendida"
+    }
+  },
+  "admin": {
+    "heading": "Panel de administración",
+    "description": "Gestión de incidencias reportadas y alertas escaladas.",
+    "tabsLabel": "Secciones del panel",
+    "tabs": {
+      "tickets": "Tickets ({{count}})",
+      "alerts": "Alertas ({{count}})"
+    },
+    "noTickets": "No hay incidencias registradas.",
+    "noAlerts": "No hay alertas escaladas."
+  },
+  "security": {
+    "heading": "Panel del Servicio de Seguridad",
+    "description": "Alertas recibidas y tickets de seguridad derivados por administración.",
+    "alertsHeading": "Alertas activas ({{count}})",
+    "ticketsHeading": "Tickets asignados ({{count}})",
+    "noAlerts": "No hay alertas activas.",
+    "noTickets": "No hay tickets asignados al Servicio de Seguridad."
+  },
+  "maintenance": {
+    "heading": "Panel del Servicio de Mantenimiento",
+    "description": "Tickets de mantenimiento derivados por administración.",
+    "ticketsHeading": "Tickets asignados ({{count}})",
+    "noTickets": "No hay tickets asignados al Servicio de Mantenimiento."
   },
   "errors": {
     "outOfCoverage": "El punto está fuera del perímetro de cobertura (500 m alrededor de los campus de la URJC).",

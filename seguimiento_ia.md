@@ -41,8 +41,8 @@ del historial de claude.ai y pegar completo ...]
 
 **Prompts correctivos posteriores (mismo hilo):**
 
-- *Aviso 1:* instrucción para no usar `: JSX.Element` como tipo de retorno en componentes funcionales, incompatible con React 19 + TypeScript actual.
-- *Aviso 2:* instrucción para que, cuando el prompt contemple ficheros placeholder (como iconos binarios), se genere su contenido real o se advierta claramente de que quedan pendientes de ser creados por el equipo.
+- _Aviso 1:_ instrucción para no usar `: JSX.Element` como tipo de retorno en componentes funcionales, incompatible con React 19 + TypeScript actual.
+- _Aviso 2:_ instrucción para que, cuando el prompt contemple ficheros placeholder (como iconos binarios), se genere su contenido real o se advierta claramente de que quedan pendientes de ser creados por el equipo.
 
 **Contexto proporcionado:**
 
@@ -97,7 +97,7 @@ Ficheros modificados:
   - **PWA no instalable por ausencia de iconos.** El prompt contemplaba iconos placeholder en `frontend/public/icons/` pero la respuesta no generó el contenido real de los PNG, únicamente indicó sus rutas. Chrome DevTools → Application → Manifest reportaba "Icon ... failed to load" para ambos tamaños y el mensaje "Installability: No supplied icon is at least 144 pixels square", por lo que el botón de instalar no aparecía en la barra de direcciones.
 
 - **Correcciones aplicadas:**
-  - **TS2503:** eliminación del tipo de retorno `: JSX.Element` en los 10 ficheros afectados (`App.tsx`, `AuthContext.tsx`, `LanguageSwitcher.tsx`, `Layout.tsx`, `MapView.tsx`, `ProtectedRoute.tsx`, `TopBar.tsx`, `HomePage.tsx`, `LoginPage.tsx`, `RouteRequestPage.tsx`) mediante *Find & Replace* en VS Code. TypeScript infiere el tipo de retorno desde el JSX devuelto, lo que además se considera mejor estilo en la versión actual. Se envió a Claude un mensaje correctivo para que no reintroduzca el patrón en iteraciones futuras.
+  - **TS2503:** eliminación del tipo de retorno `: JSX.Element` en los 10 ficheros afectados (`App.tsx`, `AuthContext.tsx`, `LanguageSwitcher.tsx`, `Layout.tsx`, `MapView.tsx`, `ProtectedRoute.tsx`, `TopBar.tsx`, `HomePage.tsx`, `LoginPage.tsx`, `RouteRequestPage.tsx`) mediante _Find & Replace_ en VS Code. TypeScript infiere el tipo de retorno desde el JSX devuelto, lo que además se considera mejor estilo en la versión actual. Se envió a Claude un mensaje correctivo para que no reintroduzca el patrón en iteraciones futuras.
   - **Iconos PWA:** generación manual de los dos PNG (192×192 y 512×512, fondo `#C00000`, texto "SU" en blanco centrado) y ubicación en `frontend/public/icons/`. Tras recompilar con `npm run build && npm run preview`, el manifest se validó sin errores, el Service Worker se mantuvo activado y el botón de instalar apareció correctamente en la barra de direcciones. Al pulsarlo, la aplicación se instala como ventana independiente. Se envió a Claude un mensaje correctivo para que en lo sucesivo, cuando contemple ficheros placeholder, los genere explícitamente o advierta de su ausencia.
 
 **Decisiones de diseño:**
@@ -146,7 +146,7 @@ del historial de claude.ai y pegar completo ...]
 
 **Prompts correctivos posteriores (mismo hilo):**
 
-- *Aviso 3:* instrucción sobre tres problemas detectados en el código generado: contenedor del mapa que colapsa a altura cero en vista móvil/tablet, parámetros sin tipar que provocan TS7006 con `strict: true`, y referencias incorrectas a la versión del ERS (v7.0 en lugar de v8.0).
+- _Aviso 3:_ instrucción sobre tres problemas detectados en el código generado: contenedor del mapa que colapsa a altura cero en vista móvil/tablet, parámetros sin tipar que provocan TS7006 con `strict: true`, y referencias incorrectas a la versión del ERS (v7.0 en lugar de v8.0).
 
 **Contexto proporcionado:**
 
@@ -263,7 +263,7 @@ del historial de claude.ai y pegar completo ...]
 
 **Prompts correctivos posteriores (mismo hilo):**
 
-- *Aviso 4:* aclaración sobre una respuesta incompleta. La primera versión de la iteración 3 que generó Claude omitió los siete ficheros fundacionales (tipos, servicios, hook `useTripRuntime`, componente `DestinationPicker`) e incluyó una línea del `TileLayer` con un artefacto `.replace(' ', '')` que corrompía la URL de tiles. Se solicitó explícitamente la regeneración de los ficheros omitidos y la iteración completa se volvió a lanzar.
+- _Aviso 4:_ aclaración sobre una respuesta incompleta. La primera versión de la iteración 3 que generó Claude omitió los siete ficheros fundacionales (tipos, servicios, hook `useTripRuntime`, componente `DestinationPicker`) e incluyó una línea del `TileLayer` con un artefacto `.replace(' ', '')` que corrompía la URL de tiles. Se solicitó explícitamente la regeneración de los ficheros omitidos y la iteración completa se volvió a lanzar.
 
 **Contexto proporcionado:**
 
@@ -359,3 +359,136 @@ Ficheros modificados:
 - Estadísticas agregadas anonimizadas (RF-51, RF-52, CU-20): pantalla `/stats` de lectura.
 - Retención de historial (RNF-18) y limpieza automática de rutas tras 24 h.
 - Tests unitarios de `monitoring.detectAnomaly`, `trip.buildTripTrack` y del reducer interno de `useTripRuntime` (Vitest).
+
+---
+
+### Iteración 4: Reporte de incidencias, roles y panel de administración
+
+**Fecha:** 22/04/2026
+
+**Objetivo:** Cerrar el recorrido funcional del prototipo añadiendo los tres bloques pendientes: (a) sistema de roles (persona usuaria, personal administrador, Servicio de Seguridad, Servicio de Mantenimiento) con selector mock en el login y navegación específica por rol; (b) flujo de reporte de incidencias accesible tanto durante un trayecto activo (botón flotante en `/trip`) como fuera de él (pantalla dedicada `/incidents/new`) con persistencia de tickets; (c) paneles de gestión: `/admin` con dos pestañas (tickets y alertas) y operativa CRUD sobre el estado, y `/security` y `/maintenance` con visibilidad filtrada por tipo de asignación. Como tarea pendiente desde la iteración 2, se añade también reverse-geocoding automático en `/routes` al colocar marcadores por click.
+
+**Requisitos cubiertos:**
+
+- RF-37 Reporte de incidencias por parte de las personas usuarias.
+- RF-38 Almacenamiento y trazabilidad de incidencias reportadas.
+- RF-41 Acceso del personal administrador a tickets y alertas.
+- RF-42 Derivación de tickets a Seguridad o Mantenimiento por parte del personal administrador.
+- RF-43 Cierre de tickets con nota de resolución.
+- RF-44 Visibilidad de alertas y tickets derivados en el Servicio de Seguridad.
+- RF-45 Visibilidad de tickets derivados en el Servicio de Mantenimiento.
+- RF-46 Resolución de tickets por el Servicio de Seguridad.
+- RF-47 Resolución de tickets por el Servicio de Mantenimiento.
+- RNF-30 Control de acceso basado en roles (RBAC) para las pantallas de gestión.
+
+Casos de uso del ERS afectados: CU-12 (Reportar incidencia), CU-14 (Consultar tickets y alertas desde administración), CU-16 (Derivar ticket), CU-17 (Cerrar ticket), CU-18 (Resolver alerta), CU-19 (Gestionar incidencias desde servicios específicos).
+
+**Prompt empleado:**
+
+```
+# Iteración 4 — Reporte de incidencias, panel de administración y cierre funcional
+
+[... resto del prompt literal tal y como se envió a Claude; recuperar
+del historial de claude.ai y pegar completo ...]
+```
+
+**Prompts correctivos posteriores (mismo hilo):**
+
+- _Aviso preventivo integrado en el propio prompt:_ "al generar iteraciones grandes, asegúrate de incluir todos los ficheros fundacionales y no empezar por los componentes asumiendo que los demás están resueltos". Evitó el error de la iteración 3: Claude empezó la respuesta por `types/incidents.ts` → `services/tickets.ts` → `services/alerts.ts` → `hooks/useTripRuntime.tsx` (modificado) → componentes → páginas → i18n, en ese orden, con todas las exports coherentes entre sí.
+- _Aviso 5:_ instrucción sobre la inclusión indebida de códigos del ERS (RF-XX, RNF-XX, CU-XX) en cadenas i18n visibles por el usuario final. Seis cadenas afectadas detectadas y corregidas manualmente. Se indica a Claude que la trazabilidad entre ERS y prototipo debe mantenerse exclusivamente en `seguimiento_ia.md` y en comentarios de código, nunca en la UI.
+
+**Contexto proporcionado:**
+
+- ERS v8.0 del proyecto.
+- Diagramas UML (casos de uso, clases y estados en formato SVG).
+- Estado del repositorio tras la iteración 3 (modo «Voy contigo» operativo, pantalla `/profile`, persistencia bajo `senda.*`).
+- Decisiones de alcance acordadas con el equipo antes del prompt:
+  - Introducción del primer selector de rol mock en la pantalla de login, como botones adicionales junto al SSO simulado existente.
+  - Panel del personal administrador con listado completo de tickets y alertas, más acciones CRUD sobre el estado (sin filtros sofisticados en esta iteración).
+  - Reporte de incidencias accesible desde dos puntos: FAB flotante en `/trip` y pantalla independiente `/incidents/new` para reportes fuera de un trayecto activo.
+
+**Artefactos generados:**
+
+Ficheros nuevos:
+
+- `frontend/src/types/incidents.ts` — tipos de dominio (`Role`, `IncidentCategory`, `TicketStatus`, `ServiceAssignee`, `Ticket`, `AlertStatus`, `AlertReason`, `AlertRecord`), constantes (`INCIDENT_CATEGORIES`, `ALL_ROLES`) y helper `rolePath(role)` que centraliza la ruta de aterrizaje post-login por rol.
+- `frontend/src/services/tickets.ts` — CRUD completo de tickets bajo `senda.tickets` (`loadTickets`, `saveTickets`, `appendTicket`, `updateTicket`, `assignTicket`, `closeTicket`) y hook reactivo `useTickets` con sincronización intra-tab vía `CustomEvent 'senda:storage'` y cross-tab vía `StorageEvent` nativo.
+- `frontend/src/services/alerts.ts` — análogo para `senda.alerts` con `loadAlerts`, `saveAlerts`, `appendAlert` (consumido desde `useTripRuntime` al escalar), `updateAlert`, `resolveAlert` y hook `useAlerts`.
+- `frontend/src/components/RoleGuard.tsx` — envoltura de rutas que acepta `allowedRoles: Role[]` y redirige a `rolePath(user.role)` cuando el rol no está permitido. Componible con `ProtectedRoute` (autenticación primero, autorización después).
+- `frontend/src/components/RoleBadge.tsx` — badge de rol con dos variantes (`default` con color por rol y `inverted` para el fondo rojo de la TopBar).
+- `frontend/src/components/RoleLoginPanel.tsx` — sección con los cuatro botones de login mock por rol, incluye estado de carga por botón (`pendingRole`) y badge visual.
+- `frontend/src/components/IncidentCategoryPicker.tsx` — selector de categoría con cuatro tarjetas clicables (lighting / feeling / obstacle / accessibility), cada una con icono SVG inline y color distintivo.
+- `frontend/src/components/IncidentReportModal.tsx` — modal accesible (`role="dialog"`, `aria-modal`, focus inicial en el botón de cerrar, cierre con `Escape`) reutilizable con `fixedLocation` + `locationLabel` opcionales. Contador de caracteres (máximo 280), validación de cobertura y llamada al hook `useTickets().create`.
+- `frontend/src/components/TicketsTable.tsx` — listado como `<ul>/<li>` (no `<table>`) con badges de categoría y estado, acciones por fila (Derivar a Seguridad, Derivar a Mantenimiento, Cerrar), formato de fecha localizado por `Intl.DateTimeFormat` y panel inline de nota de resolución al cerrar.
+- `frontend/src/components/AlertsTable.tsx` — análogo para alertas con los cinco campos del RF-32 y acción "Marcar como atendida".
+- `frontend/src/pages/AdminPage.tsx` — pantalla con dos pestañas (`Tickets` y `Alertas`) accesibles (`role="tablist"`, `aria-selected`, `aria-controls`), recuentos dinámicos entre paréntesis en los rótulos de las pestañas.
+- `frontend/src/pages/SecurityPage.tsx` — dos secciones: "Alertas activas" (filtrado por `status === 'active'`) y "Tickets asignados" (filtrado por `status === 'assigned_security'`).
+- `frontend/src/pages/MaintenancePage.tsx` — solo sección "Tickets asignados" (`status === 'assigned_maintenance'`), coherente con el ERS que solo obliga a Seguridad a recibir alertas.
+- `frontend/src/pages/IncidentReportPage.tsx` — pantalla `/incidents/new` con mini-mapa Leaflet, círculos de cobertura, selección por click validada o por geolocalización, botón "Continuar" que abre el `IncidentReportModal` y redirige a `/` al 1,5 s del éxito.
+
+Ficheros modificados:
+
+- `frontend/src/auth/types.ts` — extendido `User` con la propiedad `role: Role`; nuevo tipo `AuthContextValue` que expone `login()` (retrocompatible) y `loginAs(role)`.
+- `frontend/src/auth/AuthContext.tsx` — diccionario `MOCK_USERS` con cuatro usuarios mock por rol (`ana.garcia`, `admin`, `seguridad`, `mantenimiento`); `readStoredUser` con retrocompatibilidad para sesiones previas sin rol (default a `'user'`).
+- `frontend/src/components/AddressSearchInput.tsx` — nuevo prop `externalLabel?: string | null` para recibir la dirección textual desde el hook y mostrarla en el input; `useRef` interno para detectar cambios de `externalLabel` sin pisar texto que la persona usuaria esté tecleando.
+- `frontend/src/components/TopBar.tsx` — diccionario `NAV_BY_ROLE` con los enlaces visibles por rol; doble navegación (horizontal en desktop, barra inferior deslizable en móvil); `RoleBadge` inline en la esquina derecha junto al nombre de usuario.
+- `frontend/src/hooks/useRoutePlanner.tsx` — nuevos campos de estado `originLabel` / `destinationLabel`; `setEndpoint(kind, point, label?)` acepta un label opcional; si no se provee, dispara `reverseGeocode` con `AbortController` por endpoint para cancelar races entre clicks rápidos.
+- `frontend/src/services/geocoding.ts` — añadida función `reverseGeocode(point, options)` con el mismo patrón de `searchAddress` (`email` y `Accept-Language`, control de errores HTTP y `display_name`).
+- `frontend/src/hooks/useTripRuntime.tsx` — `useEffect` de persistencia de alertas que al entrar en estado `'alert'` invoca `appendAlert` con los datos necesarios (usuario, destinatario, motivo, ubicación, ruta); un `useRef` de firma evita duplicados si el componente se re-renderiza.
+- `frontend/src/pages/LoginPage.tsx` — añadido `RoleLoginPanel` debajo del botón principal; método `redirectAfterLogin(role)` que respeta `location.state.from` si viene de un `ProtectedRoute` y cae a `rolePath(role)` por defecto.
+- `frontend/src/pages/RouteRequestPage.tsx` — conexión del label reverse-geocodeado (`originLabel`, `destinationLabel`) a los `AddressSearchInput`; la selección por buscador pasa explícitamente el `displayName` como label para evitar el round-trip a Nominatim.
+- `frontend/src/pages/TripPage.tsx` — FAB rojo circular en la esquina inferior derecha del mapa (solo visible en estado no terminal) que abre el `IncidentReportModal` con la posición actual del trayecto como ubicación fija.
+- `frontend/src/App.tsx` — nueva pieza `RoleHome` para `/` (renderiza `HomePage` solo para rol `user`, redirige al resto); `RoleGuard` aplicado a los cuatro grupos de rutas (`user`, `admin`, `security`, `maintenance`); rutas `/admin`, `/security`, `/maintenance`, `/incidents/new` añadidas.
+- `frontend/src/i18n/locales/es.json` y `en.json` — todas las cadenas nuevas de navegación (`nav.admin`, `nav.securityService`, `nav.maintenanceService`, `nav.reportIncident`), roles, panel de login por rol, modal y categorías de incidencia, tablas de tickets y alertas, páginas `/admin`, `/security`, `/maintenance` y el flujo `/incidents/new`.
+
+**Evaluación:**
+
+- **Correctas:**
+  - `RoleGuard` separado de `ProtectedRoute`: la autenticación y la autorización se componen sin acoplarse.
+  - Redirección post-login por rol (`rolePath`) centralizada en un helper, única fuente de verdad.
+  - Persistencia idempotente de alertas desde `useTripRuntime`: un `useRef` con la firma `triggeredAt` evita duplicados si el componente se re-renderiza.
+  - Reverse-geocoding con `AbortController` por endpoint: clicks rápidos no compiten entre sí, y el label que acaba pegado en el input siempre corresponde al último punto fijado.
+  - `IncidentReportModal` reutilizable con `fixedLocation` + `locationLabel`, cerrando la casuística de ambos puntos de acceso sin duplicar el formulario.
+  - Iconos de categoría y pin de incidencia como SVG inline (cero binarios adicionales).
+  - Navegación por rol en TopBar con diccionario `NAV_BY_ROLE` extensible.
+  - Tablas como `<ul>/<li>` en vez de `<table>`: mejor adaptación a móvil, soporte directo de acciones anidadas y panel inline de nota de resolución sin peleas de ancho.
+  - Accesibilidad del panel de admin: `role="tablist"`, `role="tab"`, `role="tabpanel"`, `aria-selected`, `aria-controls`.
+  - Internacionalización completa ES/EN de todas las cadenas nuevas.
+  - Cumplimiento estricto de las cuatro instrucciones acumuladas en iteraciones anteriores (ningún `: JSX.Element`, callbacks tipados, layouts con altura explícita, todos los ficheros fundacionales en la respuesta inicial).
+
+- **Parciales:**
+  - **Referencias al ERS (`RF-XX`, `CU-XX`) visibles en la UI.** Varias descripciones de pantallas generadas por Claude incluían entre paréntesis los códigos del ERS (por ejemplo "Gestión de incidencias reportadas y alertas escaladas (RF-38, RF-41 a RF-43)."). Esto es útil como trazabilidad en la documentación académica pero inadecuado en la interfaz que vería un tribunal o un usuario final. Se corrigió manualmente eliminando los paréntesis de todas las cadenas en ambos ficheros i18n (`es.json` y `en.json`): `admin.description`, `profile.thresholds.description`, `trip.security.description`, `security.description`, `maintenance.description` e `incident.modal.subtitle`.
+  - **RF-40 (agrupación automática de incidencias cercanas)** no implementado. Requiere cálculo espacial adicional y ventana temporal, y el beneficio sin datos reales es limitado. Queda documentado como pendiente.
+  - **RF-39 (ajuste automático de ISP por incidencia reportada)** no implementado. El ISP de la iteración 2 es aleatorio, por lo que la penalización no aportaría valor didáctico. Queda pendiente para cuando el cálculo de ISP sea real.
+  - **Tickets visibles solo como listado.** No hay mapa de calor de incidencias, ni filtros por categoría o ubicación. El enfoque actual es suficiente para el alcance del ERS pero mejorable en una iteración futura.
+
+- **Fallidas:** ninguna que bloquease la integración. El `npm run build` compiló a la primera sin errores de TypeScript, incluyendo los 15 ficheros nuevos y los 12 modificados. Se produjeron únicamente dos tropiezos menores detectados pero no bloqueantes:
+  - Discrepancia de tipos `triggeredAt: string` (en `AlertPayload`, tipo interno del runtime del trayecto) vs `triggeredAt: number` (en `AlertRecord`, tipo persistido del dominio de incidencias). No se propaga porque `appendAlert` calcula su propio `triggeredAt = Date.now()` dentro del servicio, pero queda documentado.
+  - Warning de tamaño de chunk en el build: `553 kB` (por encima del umbral por defecto de 500 kB de Vite). Es un warning informativo, no un error; se resolvería con code-splitting vía `React.lazy` cuando el número de pantallas lo justifique.
+
+- **Correcciones aplicadas:**
+  - **Limpieza de referencias al ERS en la UI:** se eliminaron los sufijos "(RF-XX)" y "(RF-XX a RF-YY)" de seis cadenas en `es.json` y las seis equivalentes en `en.json`. La trazabilidad ERS↔prototipo permanece en este documento `seguimiento_ia.md`, que es el lugar correcto para mantenerla.
+
+**Incidencias adicionales de integración (no atribuibles a la IA):**
+
+- El botón "Iniciar trayecto" no se mostraba al probar inicialmente la iteración 4. Diagnóstico: `canStart = activeRoute !== null && user !== null`; en una de las pruebas, tras calcular las rutas, no se había pulsado "Elegir esta ruta" en ninguna de las tres tarjetas, por lo que `activeRoute` seguía `null`. Una vez seleccionada explícitamente una ruta, el botón apareció. Confusión ya documentada en la iteración 3.
+
+**Decisiones de diseño:**
+
+- **Selector de rol en el propio login mock.** Alternativa descartada: selector de rol en una pantalla separada tras autenticarse. La integración directa en `/login` deja más claro al tribunal que el prototipo reconoce cuatro perfiles distintos y facilita la demo (un clic y ya estás en el panel correcto).
+- **Redirección diferenciada por rol en `/`.** Alternativa descartada: que los roles no-usuaria también vieran `HomePage`. Se prefiere `RoleHome` como componente que delega en `HomePage` solo para `user` y redirige al resto a su pantalla principal. Evita una home genérica con acciones que un rol no puede ejecutar.
+- **Persistencia de alertas desde el propio `useTripRuntime`.** Alternativa descartada: un servicio separado que observara el estado desde fuera. La integración directa en el hook mantiene la lógica de negocio del trayecto encapsulada y aprovecha los campos ya disponibles (`alertPayload`, `triggeredAt`) sin añadir indirección.
+- **Paneles como listas (`<ul>`) en lugar de tablas (`<table>`).** Alternativa descartada: tablas HTML nativas. Las listas se adaptan mejor al ancho móvil, soportan filas con múltiples niveles de contenido (badges, descripción, metadatos, acciones) sin tener que pelear el ancho de columna, y facilitan el patrón de panel inline para la nota de resolución al cerrar un ticket.
+- **Icono del pin de incidencia y de las categorías como SVG inline.** Alternativa descartada: archivos SVG externos o bibliotecas de iconos. Evita dependencias, mantiene el bundle más pequeño y permite colorear según estado directamente desde el componente.
+- **Sincronización cross-tab vía `StorageEvent` nativo + intra-tab vía `CustomEvent 'senda:storage'`.** Alternativa descartada: confiar solo en `StorageEvent`, que no se dispara dentro de la misma pestaña que origina el cambio. La combinación de ambos canales garantiza que, en cualquier escenario, los componentes que consumen `senda.tickets` / `senda.alerts` se refresquen al instante.
+
+**Pendiente para una hipotética iteración 5:**
+
+- **Tests unitarios con Vitest.** `services/monitoring.ts` (detección de paradas y desvíos), `services/trip.ts` (`buildTripTrack` y distancia a ruta), `services/tickets.ts` y `services/alerts.ts` (append, assign, close, resolve), reducer de `useTripRuntime` (transiciones y persistencia idempotente de alertas), y tests de componentes para `RoleGuard`, `IncidentCategoryPicker` y `TicketsTable` con React Testing Library.
+- **Pantalla `/stats`** (RF-51, RF-52, CU-20) con agregados locales: número de tickets por categoría, incidencias por campus, alertas por mes, con gráficos mínimos (SVG directo, sin dependencias).
+- **Retención automática de datos** según RNF-18 (historial de rutas solo 24 h). Implementable como purga al montar la app.
+- **RF-40 (agrupación automática de tickets)** por proximidad (< 30 m) + ventana temporal (últimas 24 h) + misma categoría, con contador en el ticket maestro.
+- **RF-39 (ajuste automático de ISP)** una vez el cálculo deje de ser aleatorio: reducir ISP de la zona al crear ticket, aumentar al cerrarlo.
+- **Vista detalle de ticket** con mapa embebido, histórico de cambios de estado y botones de "marcar en curso" (RF-46, RF-47).
+- **Iconos PWA para iOS** (rutas `apple-touch-icon`), pendiente desde la iteración 1.
+- **Sustitución de los servicios locales por clientes HTTP** cuando exista backend real, manteniendo los hooks `useTickets` / `useAlerts` como fachada.

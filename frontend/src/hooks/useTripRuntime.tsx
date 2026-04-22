@@ -19,19 +19,17 @@ import type {
   TripState,
   TripTrack,
 } from "../types/trip";
+import type { AlertReason } from "../types/incidents";
 import { buildTripTrack } from "../services/trip";
 import { detectAnomaly } from "../services/monitoring";
 import { buildAlertPayload } from "../services/alert";
 import { haversineDistance } from "../services/coverage";
+import { appendAlert } from "../services/alerts";
 
 const TICK_MS = 1000;
 const WALKING_SPEED_KMH = 5;
 const PREALERT_WINDOW_MS = 30_000;
 const DEVIATION_DEMO_METERS = 120;
-
-// ---------------------------------------------------------------------------
-// Internal reducer state and actions
-// ---------------------------------------------------------------------------
 
 interface InternalState {
   tripState: TripState;
@@ -142,10 +140,6 @@ function escalate(
   };
 }
 
-/**
- * Produce a point perpendicular to the origin→destination chord, offset
- * by `distanceMeters` on the "right" side. Used by the deviation demo.
- */
 function offsetOffRoute(
   waypoints: LatLng[],
   from: LatLng,
@@ -174,8 +168,6 @@ function reducer(s: InternalState, action: Action): InternalState {
   switch (action.type) {
     case "TICK": {
       const { now } = action;
-
-      // Prealert countdown expiration -> escalate (RF-28, RF-31).
       if (
         s.tripState === "prealert" &&
         s.prealertDeadline !== null &&
@@ -183,12 +175,8 @@ function reducer(s: InternalState, action: Action): InternalState {
       ) {
         return escalate(s, "timeout");
       }
-      if (s.tripState !== "in_progress") {
-        return s;
-      }
+      if (s.tripState !== "in_progress") return s;
 
-      // Paused simulation: count pause duration, fire prealert when threshold
-      // is crossed (RF-25, RF-26).
       if (s.simulatePaused) {
         const pauseDurationSec = s.pauseStartedAt
           ? Math.floor((now - s.pauseStartedAt) / 1000)
@@ -200,13 +188,10 @@ function reducer(s: InternalState, action: Action): InternalState {
           thresholds: s.thresholds,
         });
         const next: InternalState = { ...s, pauseDurationSec };
-        if (anomaly === "pause") {
-          return enterPrealert(next, "pause", now);
-        }
+        if (anomaly === "pause") return enterPrealert(next, "pause", now);
         return next;
       }
 
-      // Advance the simulation by one tick.
       const elapsedSec = s.elapsedSec + TICK_MS / 1000;
       if (elapsedSec >= s.track.totalDurationSec) {
         const finalPos = s.route.waypoints[s.route.waypoints.length - 1];
@@ -218,7 +203,6 @@ function reducer(s: InternalState, action: Action): InternalState {
           traveledPath: [...s.traveledPath, finalPos],
         };
       }
-
       const newPosition = positionFromTrack(s.track, elapsedSec);
       const last = s.traveledPath[s.traveledPath.length - 1];
       const appendToPath = last
@@ -227,7 +211,6 @@ function reducer(s: InternalState, action: Action): InternalState {
       const nextPath = appendToPath
         ? [...s.traveledPath, newPosition]
         : s.traveledPath;
-
       return {
         ...s,
         elapsedSec,
@@ -236,11 +219,9 @@ function reducer(s: InternalState, action: Action): InternalState {
         pauseDurationSec: 0,
       };
     }
-
     case "FORCE_PREALERT":
       return enterPrealert(s, "manual", action.now);
-
-    case "CONFIRM_OK": {
+    case "CONFIRM_OK":
       if (s.tripState !== "prealert") return s;
       return {
         ...s,
@@ -251,14 +232,10 @@ function reducer(s: InternalState, action: Action): InternalState {
         pauseStartedAt: null,
         pauseDurationSec: 0,
       };
-    }
-
-    case "ESCALATE_NOW": {
+    case "ESCALATE_NOW":
       if (s.tripState !== "prealert") return s;
       return escalate(s, s.anomalyKind ?? "manual");
-    }
-
-    case "TOGGLE_SIMULATED_PAUSE": {
+    case "TOGGLE_SIMULATED_PAUSE":
       if (s.tripState !== "in_progress") return s;
       if (s.simulatePaused) {
         return {
@@ -274,8 +251,6 @@ function reducer(s: InternalState, action: Action): InternalState {
         pauseStartedAt: action.now,
         pauseDurationSec: 0,
       };
-    }
-
     case "TRIGGER_DEVIATION": {
       if (s.tripState !== "in_progress") return s;
       const offRoute = offsetOffRoute(
@@ -296,7 +271,6 @@ function reducer(s: InternalState, action: Action): InternalState {
       });
       return enterPrealert(next, anomaly ?? "deviation", action.now);
     }
-
     case "ARRIVE": {
       if (
         s.tripState === "completed" ||
@@ -314,28 +288,18 @@ function reducer(s: InternalState, action: Action): InternalState {
         prealertDeadline: null,
       };
     }
-
-    case "CANCEL": {
+    case "CANCEL":
       if (s.tripState === "completed" || s.tripState === "cancelled") return s;
       return { ...s, tripState: "cancelled", prealertDeadline: null };
-    }
-
-    case "MARK_ALERT_RESOLVED": {
+    case "MARK_ALERT_RESOLVED":
       if (s.tripState !== "alert") return s;
       return { ...s, tripState: "completed" };
-    }
-
     case "UPDATE_THRESHOLDS":
       return { ...s, thresholds: action.thresholds };
-
     default:
       return s;
   }
 }
-
-// ---------------------------------------------------------------------------
-// Context surface
-// ---------------------------------------------------------------------------
 
 export interface TripRuntimeContextValue {
   tripState: TripState;
@@ -389,12 +353,9 @@ export function TripRuntimeProvider({
     { route, recipient, user, thresholds },
     init,
   );
-
-  // Independent render-clock used to animate the prealert countdown display
-  // without spamming the reducer — the state is only for business logic.
   const [renderNow, setRenderNow] = useState<number>(() => Date.now());
 
-  // Keep internal thresholds in sync if the profile changes them mid-trip.
+  // Keep thresholds in sync if the profile changes them mid-trip.
   const lastThresholdsRef = useRef<Thresholds>(thresholds);
   useEffect(() => {
     if (
@@ -408,7 +369,7 @@ export function TripRuntimeProvider({
     }
   }, [thresholds]);
 
-  // Simulation tick — active while the trip is not terminated.
+  // Simulation tick, halted on terminal states.
   useEffect(() => {
     const terminal =
       state.tripState === "completed" ||
@@ -421,12 +382,34 @@ export function TripRuntimeProvider({
     return () => window.clearInterval(interval);
   }, [state.tripState]);
 
-  // Countdown repaint clock — only runs while prealert is open.
+  // Repaint the countdown while prealert is open.
   useEffect(() => {
     if (state.tripState !== "prealert") return undefined;
     const interval = window.setInterval(() => setRenderNow(Date.now()), 250);
     return () => window.clearInterval(interval);
   }, [state.tripState]);
+
+  // Persist escalated alerts exactly once under `senda.alerts` so that the
+  // admin/security panels can read them (RF-44, CU-11 simulated).
+  const persistedAlertIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (state.tripState !== "alert" || !state.alertPayload) return;
+    const signature = state.alertPayload.triggeredAt;
+    if (persistedAlertIdRef.current === signature) return;
+    persistedAlertIdRef.current = signature;
+
+    const reason: AlertReason = state.alertPayload.triggerReason;
+    appendAlert({
+      userId: state.user.id,
+      userName: state.alertPayload.userName,
+      userEmail: state.alertPayload.userEmail,
+      recipientName: state.alertPayload.recipient?.name ?? null,
+      reason,
+      location: state.alertPayload.lastKnownLocation,
+      destination: state.alertPayload.destination,
+      routeLabel: state.alertPayload.routeLabel,
+    });
+  }, [state.tripState, state.alertPayload, state.user.id]);
 
   const forcePrealert = useCallback(
     () => dispatch({ type: "FORCE_PREALERT", now: Date.now() }),
@@ -465,7 +448,6 @@ export function TripRuntimeProvider({
       state.prealertDeadline !== null
         ? Math.max(0, Math.ceil((state.prealertDeadline - renderNow) / 1000))
         : 0;
-
     return {
       tripState: state.tripState,
       route: state.route,
