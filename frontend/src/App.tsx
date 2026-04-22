@@ -4,6 +4,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import RouteRequestPage from "./pages/RouteRequestPage";
+import TripPage from "./pages/TripPage";
+import ProfilePage from "./pages/ProfilePage";
 
 export default function App() {
   return (
@@ -14,6 +16,8 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/routes" element={<RouteRequestPage />} />
+            <Route path="/trip" element={<TripPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Route>

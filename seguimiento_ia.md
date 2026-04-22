@@ -223,3 +223,139 @@ Ficheros modificados:
 - Sustitución del cálculo simulado por OSRM real (en cuanto esté el backend).
 - Indicador de antigüedad de los datos en cada ruta (RF-16, CU-05), relevante cuando haya datos reales de LumenSmart.
 - Tests unitarios de `coverage.ts`, `routing.ts` y del Provider (Vitest + React Testing Library).
+
+---
+
+### Iteración 3: Modo «Voy contigo», monitorización y prealertas
+
+**Fecha:** 22/04/2026
+
+**Objetivo:** Incorporar el núcleo funcional del acompañamiento virtual del ERS. Nueva pantalla `/trip` con simulación del trayecto activo a 5 km/h, compartición simulada con una persona destinataria (contacto de confianza o voluntariado), detección automática de paradas y desvíos contra umbrales configurables, modal de prealerta con cuenta atrás de 30 segundos y escalado a alerta con panel del Servicio de Seguridad simulado. Añadida también la pantalla `/profile` con CRUD de contactos de confianza, sliders de umbrales de prealerta y alta/baja como persona voluntaria.
+
+**Requisitos cubiertos:**
+
+- RF-20 Activar modo «Voy contigo».
+- RF-21 Selección de persona destinataria del acompañamiento.
+- RF-22 Compartición de la ubicación durante el trayecto.
+- RF-23 Visualización de la ubicación compartida por parte del destinatario (vista simulada, panel lateral).
+- RF-24 Visualización de la ruta activa por parte del destinatario.
+- RF-25 Detección de paradas inesperadas y desvíos.
+- RF-26 Emisión de prealerta ante paradas o desvíos.
+- RF-27 Confirmación manual del estado «estoy bien».
+- RF-28 Plazo de 30 segundos para confirmar antes de escalar.
+- RF-29 Configuración de umbrales de prealerta (tiempo de parada, distancia de desvío).
+- RF-30 Notificación de alerta al destinatario.
+- RF-31 Escalado al Servicio de Seguridad si no hay respuesta.
+- RF-32 Contenido de la alerta (ubicación actual, ruta, persona usuaria, hora, destinatario).
+- RF-33 Registro como persona voluntaria.
+- RF-49 Configuración de personas de contacto de confianza.
+
+Casos de uso del ERS afectados: CU-07 (Activar modo «Voy contigo»), CU-08 (Elegir destinatario), CU-09 (Compartir ubicación), CU-10 (Gestionar prealertas), CU-11 (Enviar alerta), CU-13 (Registrarse como voluntariado), CU-22 (Gestionar contactos de confianza), CU-23 (Configurar umbrales de prealerta).
+
+**Prompt empleado:**
+
+```
+# Iteración 3 — Modo «Voy contigo», monitorización y prealertas
+
+[... resto del prompt literal tal y como se envió a Claude; recuperar
+del historial de claude.ai y pegar completo ...]
+```
+
+**Prompts correctivos posteriores (mismo hilo):**
+
+- *Aviso 4:* aclaración sobre una respuesta incompleta. La primera versión de la iteración 3 que generó Claude omitió los siete ficheros fundacionales (tipos, servicios, hook `useTripRuntime`, componente `DestinationPicker`) e incluyó una línea del `TileLayer` con un artefacto `.replace(' ', '')` que corrompía la URL de tiles. Se solicitó explícitamente la regeneración de los ficheros omitidos y la iteración completa se volvió a lanzar.
+
+**Contexto proporcionado:**
+
+- ERS v8.0 del proyecto.
+- Diagramas UML (casos de uso, clases y estados en formato SVG).
+- Estado del repositorio tras la iteración 2 (pantalla `/routes` con solicitud funcional de rutas alternativas clasificadas por ISP).
+- Decisiones de alcance acordadas con el equipo antes del prompt:
+  - División del trabajo restante en dos iteraciones (esta, centrada en el modo «Voy contigo»; la siguiente, en reporte de incidencias y panel de administración).
+  - Simulación del recorrido mediante animación automática con botón adicional "Forzar prealerta" siempre visible (opción mixta), en lugar de solo animación o solo botones manuales.
+  - Creación de una pantalla nueva `/trip` independiente de `/routes`, en lugar de ampliar la existente.
+
+**Artefactos generados:**
+
+Ficheros nuevos:
+
+- `frontend/src/types/trip.ts` — tipos de dominio (`TripState`, `TripRuntime`, `Recipient`, `Contact`, `Volunteer`, `AlertPayload`, `Thresholds`, `PrealertReason`).
+- `frontend/src/services/storage.ts` — helpers para `localStorage` bajo el namespace `senda.*` (contactos, voluntariado por usuario, registro global de voluntariado, umbrales) con hooks reactivos (`useContacts`, `useStoredVolunteers`, `useThresholds`) sincronizados mediante un event-bus propio (`CustomEvent 'senda:storage'`).
+- `frontend/src/services/monitoring.ts` — función `detectAnomaly(position, route, thresholds)` para validar paradas y desvíos contra umbrales.
+- `frontend/src/services/trip.ts` — función `buildTripTrack(route, speedKmh)` que pre-calcula una secuencia de posiciones temporizadas a lo largo de la ruta.
+- `frontend/src/services/alert.ts` — función `buildAlertPayload(trip, user)` que compone el objeto de datos a mostrar en el panel del Servicio de Seguridad.
+- `frontend/src/hooks/useTripRuntime.tsx` — Provider y hook con reducer puro que modela la máquina de estados del trayecto (`preparing → in_progress → prealert → alert → completed/cancelled`), dos relojes independientes (tick de animación y clock de pared para cuenta atrás), y acciones expuestas (`startTrip`, `confirmOk`, `triggerAlert`, `resolveAlert`, `togglePause`, `simulateDeviation`, `forcePrealert`, `endTrip`, `cancelTrip`).
+- `frontend/src/components/DestinationPicker.tsx` — modal accesible con la lista combinada de contactos y voluntarios disponibles; filtra al usuario actual para evitar autoacompañamiento.
+- `frontend/src/components/TripPanel.tsx` — panel lateral con métricas en vivo (progreso, tiempo transcurrido/estimado, distancia, ISP, estado) y botones de acción (He llegado, Forzar prealerta, Simular parada, Simular desvío, Cancelar con confirmación inline).
+- `frontend/src/components/TripMap.tsx` — mapa principal con la ruta activa, marcador del caminante como `divIcon` con SVG inline que cambia de color según el estado (azul normal, amarillo prealerta, rojo alerta), traza del historial de posiciones con polilínea discontinua y re-encuadre automático.
+- `frontend/src/components/CompanionView.tsx` — vista simulada del destinatario: mini-mapa no interactivo con seguimiento automático y badge "ALERTA RECIBIDA" cuando procede.
+- `frontend/src/components/PrealertModal.tsx` — modal accesible (`role="alertdialog"`, `aria-modal="true"`, `aria-live="assertive"` en la cuenta atrás) con cuenta atrás de 30 segundos y dos botones grandes (56 px).
+- `frontend/src/components/SecurityPanel.tsx` — panel del Servicio de Seguridad simulado con los datos completos de la alerta (RF-32).
+- `frontend/src/components/ContactsManager.tsx` — CRUD básico de contactos de confianza con persistencia en `localStorage`.
+- `frontend/src/components/ThresholdsEditor.tsx` — dos sliders para tiempo de parada máximo (30-300 s) y distancia de desvío máxima (20-200 m).
+- `frontend/src/components/VolunteerToggle.tsx` — switch accesible (role="switch", aria-checked) para dar de alta/baja el usuario actual como persona voluntaria.
+- `frontend/src/pages/TripPage.tsx` — pantalla que envuelve el Provider del runtime, recibe ruta y destinatario por `location.state` y redirige a `/routes` si se accede directamente sin contexto.
+- `frontend/src/pages/ProfilePage.tsx` — pantalla de perfil con las tres secciones (contactos, umbrales, voluntariado).
+
+Ficheros modificados:
+
+- `frontend/src/App.tsx` — añadidas rutas `/trip` y `/profile` como rutas protegidas.
+- `frontend/src/components/TopBar.tsx` — añadido enlace "Perfil" con `NavLink` y estilo activo.
+- `frontend/src/pages/RouteRequestPage.tsx` — botón verde "Iniciar trayecto" visible cuando hay ruta activa y sesión iniciada; apertura del `DestinationPicker` y navegación a `/trip` con la ruta y el destinatario como `location.state`.
+- `frontend/src/index.css` — añadido keyframe `senda-pulse` para el efecto de pulso del marcador de usuario en `TripMap`, sin tocar la configuración previa de Tailwind, Leaflet y focus-visible.
+- `frontend/src/i18n/locales/es.json` y `en.json` — todas las cadenas nuevas para la pantalla `/trip` (panel, estados, mapa, acompañante, prealerta, alerta, panel de Seguridad, terminales), la pantalla `/profile` (contactos, umbrales, voluntariado) y el selector `DestinationPicker`.
+
+**Evaluación:**
+
+- **Correctas:**
+  - Máquina de estados del trayecto modelada con `useReducer` puro; transiciones deterministas y fáciles de razonar.
+  - Dos relojes independientes en el Provider: tick de animación (cada tickRateMs) y clock de pared (cada 250 ms) que solo se activa durante `prealert`. Pausar la animación no congela la cuenta atrás.
+  - Escalado prealerta → alerta por timeout vía comprobación `now >= prealertDeadline` en el handler de TICK: un único punto de escalado, sin `setTimeout` dedicado que limpiar si se confirma antes.
+  - Ambos caminos de prealerta (parada y desvío) invocan `monitoring.detectAnomaly`; el servicio se ejerce en flujo real, no es decorativo.
+  - Modal de prealerta con accesibilidad adecuada: `role="alertdialog"`, backdrop con `body.style.overflow='hidden'`, cuenta atrás en `aria-live="assertive" aria-atomic="true"`, botones de 56 px, `navigator.vibrate` best-effort.
+  - Marcador pulsante como `L.divIcon` con SVG inline + keyframe CSS, sin dependencias ni binarios adicionales.
+  - Internacionalización completa ES/EN de toda la nueva UI.
+  - Cumplimiento estricto de las tres instrucciones previas (ningún `: JSX.Element`, todos los callbacks tipados, layouts con altura explícita en breakpoints pequeños).
+  - Filtrado del usuario actual de la lista de voluntariado para evitar autoacompañamiento.
+  - Sincronización reactiva entre componentes del mismo tab mediante `CustomEvent 'senda:storage'` (el evento nativo `storage` solo dispara cross-tab).
+  - Umbrales en vivo: cambiar los sliders en `/profile` desde otra pestaña se refleja en el runtime del trayecto activo.
+
+- **Parciales:**
+  - La "transmisión" al destinatario es local: `CompanionView` lee el mismo contexto que la pantalla principal, no hay WebSocket ni canal de red real. Cumple RF-23 y RF-24 a efectos de demo, pero en una implementación real habría que sustituir el Provider por uno que suscriba a un canal del backend.
+  - La prealerta por parada solo se dispara si la persona usuaria pulsa "Simular parada": con la animación activa el marcador siempre avanza, así que el trigger temporal nunca se cumpliría sin la pausa explícita.
+  - La función `detectAnomaly` con flujo real de GPS (posición recibida con drift natural) no se ejercita; en el prototipo la detección de desvío la dispara el botón. La función queda como contrato para sustituir la simulación en el futuro.
+  - El estado del trayecto no se persiste: un refresco en `/trip` redirige a `/routes`. Aceptable para prototipo.
+
+- **Fallidas:**
+  - **Respuesta inicial incompleta.** La primera generación de la iteración 3 omitió siete ficheros fundacionales (`types/trip.ts`, `services/storage.ts`, `services/monitoring.ts`, `services/trip.ts`, `services/alert.ts`, `hooks/useTripRuntime.tsx`, `components/DestinationPicker.tsx`). Claude empezó la respuesta por `TripMap.tsx` asumiendo que los demás ya estaban resueltos, y si se hubiera integrado tal cual habrían caído decenas de errores TS2307 en cascada al compilar.
+  - **Artefacto en una línea del `TileLayer` de `TripMap.tsx`.** En la primera generación, la propiedad `url` incluía un `.replace(' ', '')` espurio, probablemente fruto de un error de streaming en la respuesta. La propia IA lo señaló al final pidiendo pegar la línea corregida, pero el caso muestra que no siempre es seguro pegar la respuesta tal cual.
+
+- **Correcciones aplicadas:**
+  - **Respuesta incompleta:** se pidió explícitamente a Claude (en el mismo chat del proyecto) la regeneración completa de la iteración, marcando los siete ficheros omitidos y las firmas públicas que los componentes ya enviados esperaban consumir. La segunda respuesta fue coherente y completa.
+  - **Línea del `TileLayer`:** no llegó a integrarse; la versión regenerada ya trae la URL correcta `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png` sin artefactos.
+  - **Fusión de `index.css`:** se mantuvieron los bloques originales (`.leaflet-container`, `:focus-visible`, `html/body/#root { height: 100% }`, `font-family`) y se añadió únicamente la sección nueva (`@keyframes senda-pulse`) más el `min-height: 320px` del contenedor de Leaflet que Claude sugería como red de seguridad.
+
+**Incidencias adicionales de integración (no atribuibles a la IA):**
+
+- Error puntual de uso durante la prueba de la Fase 2 de la checklist: el botón "Iniciar trayecto" solo aparece cuando `canStart = activeRoute !== null && user !== null`. En una de las pruebas parecía que el botón no aparecía pese a haber calculado las rutas, por confusión entre "calcular rutas" y "elegir una ruta concreta" (pulsar "Elegir esta ruta" en la tarjeta correspondiente). Una vez seleccionada la ruta activa, el botón se mostró.
+- Aviso sobre el ciclo de trabajo: `npm run preview` sirve siempre el último build en `dist/`; si se ejecuta después de `npm run dev` sin volver a lanzar `npm run build` entre medias, parece que no hay cambios. El flujo correcto durante el desarrollo es usar `npm run dev` (puerto 5173 con hot reload) y reservar `npm run build && npm run preview` únicamente para la verificación final de la PWA.
+
+**Decisiones de diseño:**
+
+- **Paso de `route` y `recipient` por `location.state`** al navegar de `/routes` a `/trip`. Evita elevar el Provider del trayecto al nivel de App y mantiene el runtime local a la pantalla. Si alguien recarga la pestaña o navega directo a `/trip`, se redirige a `/routes` (guardarraíl en `TripPage`).
+- **Aceleración de demo** (`DEFAULT_DEMO_ACCELERATION = 10`). El ritmo realista de 5 km/h haría que un trayecto intracampus durase varios minutos. La aceleración hace que el trayecto simulado dure ~30-60 segundos, lo suficiente para presentar los cuatro flujos (en curso, prealerta por parada, prealerta por desvío, escalado a alerta) en una demo breve.
+- **Detección de desvío por punto inyectado**, no por lectura pasiva. `simulateDeviation` calcula un punto perpendicular fuera de la ruta (`~2 × deviationThreshold + 20 m`) y lo fija como posición actual, forzando que `distanceToRoute > umbral` en la lógica real de `monitoring.detectAnomaly`.
+- **Sin librerías externas de modales, animación ni haptics**. El modal es un `div role="alertdialog"` con backdrop; el pulso del marcador es CSS puro; la vibración usa `navigator.vibrate` best-effort (silencioso donde no se soporta).
+- **Voluntariado por-usuario** (`senda.volunteer.${userId}`) para reflejar que el alta es individual, pero el registro global de voluntariado es compartido (`senda.volunteers`). Coherente con un backend futuro.
+- **Layout responsivo estricto:** todos los contenedores de mapa tienen altura explícita en móvil/tablet (`h-[55vh] min-h-[360px]` en `/trip`, `h-[60vh] min-h-[400px]` en `/routes`) y solo pasan a `flex-1` en breakpoints desktop donde el padre garantiza altura. Aprendido de la corrección aplicada en la iteración 2.
+
+**Pendiente para la próxima iteración:**
+
+- Reverse-geocoding en `/routes` al colocar marcadores por click, para rellenar los inputs de texto con la dirección textual.
+- Reporte de incidencias del entorno durante el trayecto activo (RF-37 a RF-40, CU-12): categorías "Farola fundida", "Zona solitaria", "Obstáculo en la vía", "Punto con dificultad"; generación de ticket persistente.
+- Panel del personal administrador (RF-41 a RF-47, CU-14, CU-16, CU-17, CU-18, CU-19): pantalla protegida por rol `admin` con listado de tickets y alertas, acciones de derivación y cierre. Introducción del primer selector de rol mock, distinto al de persona usuaria.
+- Paneles filtrados por rol para el Servicio de Seguridad y el Servicio de Mantenimiento (RF-44, RF-45).
+- Indicador de antigüedad de los datos en las rutas propuestas y en el trayecto activo (RF-16, CU-05), relevante cuando haya integración real con LumenSmart.
+- Estadísticas agregadas anonimizadas (RF-51, RF-52, CU-20): pantalla `/stats` de lectura.
+- Retención de historial (RNF-18) y limpieza automática de rutas tras 24 h.
+- Tests unitarios de `monitoring.detectAnomaly`, `trip.buildTripTrack` y del reducer interno de `useTripRuntime` (Vitest).

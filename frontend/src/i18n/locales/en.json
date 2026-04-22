@@ -6,6 +6,7 @@
   "nav": {
     "home": "Home",
     "requestRoute": "Request route",
+    "profile": "Profile",
     "logout": "Sign out"
   },
   "login": {
@@ -67,6 +68,147 @@
       "distanceValue": "{{value}} km",
       "duration": "Time",
       "durationValue": "{{value}} min"
+    }
+  },
+  "trip": {
+    "startTripCta": "Start trip",
+    "picker": {
+      "title": "Pick a companion",
+      "subtitle": "The person you pick will receive your real-time location while the trip is active («Voy contigo» mode).",
+      "contactsHeading": "Trusted contacts",
+      "volunteersHeading": "Volunteers",
+      "noContacts": "You don't have any trusted contacts yet. Add some in Profile.",
+      "noVolunteers": "No volunteers available right now.",
+      "badgeContact": "Contact",
+      "badgeVolunteer": "Volunteer",
+      "startTrip": "Start trip",
+      "cancel": "Cancel"
+    },
+    "panel": {
+      "heading": "Active trip",
+      "recipient": "Accompanied by: {{name}} ({{kind}})",
+      "noRecipient": "No companion",
+      "elapsed": "Elapsed",
+      "remaining": "Remaining",
+      "distanceTraveled": "Traveled",
+      "distanceTotal": "Total",
+      "averageIsp": "Avg PSI",
+      "routeLabel": "Route",
+      "arrived": "I've arrived",
+      "forcePrealert": "Force prealert",
+      "simulatePause": "Simulate pause",
+      "resumeMovement": "Resume movement",
+      "simulateDeviation": "Simulate deviation",
+      "cancel": "Cancel trip",
+      "simulatedPauseActive": "Simulated pause: {{seconds}} s of {{threshold}} s before prealert.",
+      "confirmCancel": {
+        "title": "Cancel this trip?",
+        "message": "«Voy contigo» will be closed and location sharing with your companion will stop.",
+        "yes": "Yes, cancel",
+        "no": "Keep going"
+      }
+    },
+    "statuses": {
+      "preparing": "Preparing",
+      "in_progress": "In progress",
+      "prealert": "Prealert",
+      "alert": "Alert sent",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "map": {
+      "label": "Active trip map",
+      "youAreHere": "Your current location"
+    },
+    "companion": {
+      "heading": "What your companion sees",
+      "sharingWith": "Sharing with {{name}}",
+      "noRecipient": "No companion set",
+      "mapLabel": "Simulated companion view",
+      "label": "Is here",
+      "lastUpdate": "Last update",
+      "status": "Status",
+      "alertReceived": "An alert notification has been received."
+    },
+    "prealert": {
+      "title": "Are you okay?",
+      "message": "Something unusual has been detected during your trip. Confirm you're okay before the alert escalates.",
+      "reasonPause": "Reason: extended pause.",
+      "reasonDeviation": "Reason: off-route deviation.",
+      "reasonManual": "Reason: manually requested prealert.",
+      "countdownLabel": "s remaining",
+      "imOk": "I'm okay",
+      "askHelp": "Ask for help now"
+    },
+    "alert": {
+      "banner": "Alert sent to the Security Service. We're with you."
+    },
+    "terminal": {
+      "completed": "You've arrived at your destination. Nice work!",
+      "cancelled": "Trip cancelled.",
+      "backHome": "Back to home"
+    },
+    "security": {
+      "heading": "Security Service panel (simulated)",
+      "description": "Data received with the alert (RF-32).",
+      "user": "User",
+      "email": "Email",
+      "reason": "Reason",
+      "triggeredAt": "Alert time",
+      "recipient": "Notified companion",
+      "noRecipient": "No companion",
+      "routeLabel": "Route",
+      "lastLocation": "Last location",
+      "destination": "Destination",
+      "waypointCount": "Route with {{count}} points",
+      "markResolved": "Mark as resolved",
+      "resolved": "Resolved"
+    },
+    "links": {
+      "adjustThresholds": "Adjust prealert thresholds in Profile"
+    },
+    "values": {
+      "secondsAgo": "{{value}} s ago"
+    }
+  },
+  "profile": {
+    "heading": "Profile",
+    "subheading": "{{name}} · {{email}}",
+    "contacts": {
+      "heading": "Trusted contacts",
+      "description": "People who will receive alert notifications during a trip.",
+      "empty": "You don't have any trusted contacts yet.",
+      "name": "Name",
+      "phone": "Phone",
+      "add": "Add contact",
+      "remove": "Remove",
+      "removeAria": "Remove contact {{name}}",
+      "invalid": "Enter a name (≥2 chars) and a phone (≥4 chars)."
+    },
+    "thresholds": {
+      "heading": "Prealert thresholds",
+      "description": "Tune when the app detects a possible incident during a trip (RF-29).",
+      "pause": {
+        "label": "Max pause time",
+        "description": "How long you can stay still before it's considered an incident."
+      },
+      "deviation": {
+        "label": "Max deviation distance",
+        "description": "Distance from the planned route before it's considered a sharp deviation."
+      },
+      "seconds": "{{value}} s",
+      "meters": "{{value}} m",
+      "saved": "Changes saved."
+    },
+    "volunteer": {
+      "heading": "Volunteering",
+      "description": "Offer to virtually accompany other people during their trips.",
+      "active": "You are registered as a volunteer",
+      "activeDescription": "Others can now pick you as a companion when starting «Voy contigo».",
+      "inactive": "You are not registered",
+      "inactiveDescription": "Enable volunteering to appear in the list of available companions.",
+      "toggleOn": "Register",
+      "toggleOff": "Unregister"
     }
   },
   "errors": {

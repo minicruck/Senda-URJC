@@ -6,6 +6,7 @@
   "nav": {
     "home": "Inicio",
     "requestRoute": "Solicitar ruta",
+    "profile": "Perfil",
     "logout": "Cerrar sesión"
   },
   "login": {
@@ -67,6 +68,147 @@
       "distanceValue": "{{value}} km",
       "duration": "Tiempo",
       "durationValue": "{{value}} min"
+    }
+  },
+  "trip": {
+    "startTripCta": "Iniciar trayecto",
+    "picker": {
+      "title": "Elige destinatario",
+      "subtitle": "La persona elegida recibirá tu ubicación en tiempo real durante el trayecto (modo «Voy contigo»).",
+      "contactsHeading": "Contactos de confianza",
+      "volunteersHeading": "Personas voluntarias",
+      "noContacts": "No tienes contactos de confianza. Puedes añadirlos desde Perfil.",
+      "noVolunteers": "No hay personas voluntarias disponibles ahora mismo.",
+      "badgeContact": "Contacto",
+      "badgeVolunteer": "Voluntariado",
+      "startTrip": "Iniciar trayecto",
+      "cancel": "Cancelar"
+    },
+    "panel": {
+      "heading": "Trayecto activo",
+      "recipient": "Acompañándote: {{name}} ({{kind}})",
+      "noRecipient": "Sin acompañante",
+      "elapsed": "Transcurrido",
+      "remaining": "Restante",
+      "distanceTraveled": "Recorrido",
+      "distanceTotal": "Total",
+      "averageIsp": "ISP medio",
+      "routeLabel": "Ruta",
+      "arrived": "He llegado",
+      "forcePrealert": "Forzar prealerta",
+      "simulatePause": "Simular parada",
+      "resumeMovement": "Reanudar movimiento",
+      "simulateDeviation": "Simular desvío",
+      "cancel": "Cancelar trayecto",
+      "simulatedPauseActive": "Parada simulada: {{seconds}} s de {{threshold}} s antes de prealerta.",
+      "confirmCancel": {
+        "title": "¿Cancelar trayecto?",
+        "message": "Se cerrará el modo «Voy contigo» y dejarás de compartir ubicación con tu acompañante.",
+        "yes": "Sí, cancelar",
+        "no": "Seguir en el trayecto"
+      }
+    },
+    "statuses": {
+      "preparing": "Preparando",
+      "in_progress": "En curso",
+      "prealert": "Prealerta",
+      "alert": "Alerta enviada",
+      "completed": "Finalizado",
+      "cancelled": "Cancelado"
+    },
+    "map": {
+      "label": "Mapa del trayecto activo",
+      "youAreHere": "Tu ubicación actual"
+    },
+    "companion": {
+      "heading": "Qué ve tu acompañante",
+      "sharingWith": "Compartiendo con {{name}}",
+      "noRecipient": "Sin acompañante asignado",
+      "mapLabel": "Vista simulada del acompañante",
+      "label": "Está aquí",
+      "lastUpdate": "Última actualización",
+      "status": "Estado",
+      "alertReceived": "Se ha recibido una notificación de alerta."
+    },
+    "prealert": {
+      "title": "¿Estás bien?",
+      "message": "Hemos detectado algo inusual en tu trayecto. Confirma que estás bien antes de que la alerta se escale.",
+      "reasonPause": "Motivo: parada prolongada.",
+      "reasonDeviation": "Motivo: desvío respecto a la ruta.",
+      "reasonManual": "Motivo: prealerta solicitada manualmente.",
+      "countdownLabel": "s restantes",
+      "imOk": "Estoy bien",
+      "askHelp": "Pedir ayuda ahora"
+    },
+    "alert": {
+      "banner": "Alerta enviada al Servicio de Seguridad. Estamos contigo."
+    },
+    "terminal": {
+      "completed": "Has llegado a tu destino. ¡Bien hecho!",
+      "cancelled": "Trayecto cancelado.",
+      "backHome": "Volver al inicio"
+    },
+    "security": {
+      "heading": "Panel Servicio de Seguridad (simulado)",
+      "description": "Datos recibidos con la alerta (RF-32).",
+      "user": "Usuaria",
+      "email": "Correo",
+      "reason": "Motivo",
+      "triggeredAt": "Hora de la alerta",
+      "recipient": "Acompañante notificado",
+      "noRecipient": "Sin acompañante",
+      "routeLabel": "Ruta",
+      "lastLocation": "Última ubicación",
+      "destination": "Destino",
+      "waypointCount": "Ruta con {{count}} puntos",
+      "markResolved": "Marcar como resuelta",
+      "resolved": "Resuelta"
+    },
+    "links": {
+      "adjustThresholds": "Ajustar umbrales de prealerta en Perfil"
+    },
+    "values": {
+      "secondsAgo": "hace {{value}} s"
+    }
+  },
+  "profile": {
+    "heading": "Perfil",
+    "subheading": "{{name}} · {{email}}",
+    "contacts": {
+      "heading": "Contactos de confianza",
+      "description": "Personas que recibirán notificaciones de alerta durante un trayecto.",
+      "empty": "Aún no tienes contactos de confianza.",
+      "name": "Nombre",
+      "phone": "Teléfono",
+      "add": "Añadir contacto",
+      "remove": "Eliminar",
+      "removeAria": "Eliminar contacto {{name}}",
+      "invalid": "Introduce un nombre (≥2 caracteres) y un teléfono (≥4 caracteres)."
+    },
+    "thresholds": {
+      "heading": "Umbrales de prealerta",
+      "description": "Ajusta cuándo la aplicación detecta una posible incidencia durante un trayecto (RF-29).",
+      "pause": {
+        "label": "Tiempo de parada máximo",
+        "description": "Duración de una parada sin avanzar antes de considerar incidencia."
+      },
+      "deviation": {
+        "label": "Distancia de desvío máxima",
+        "description": "Distancia a la ruta prevista antes de considerar desvío brusco."
+      },
+      "seconds": "{{value}} s",
+      "meters": "{{value}} m",
+      "saved": "Cambios guardados."
+    },
+    "volunteer": {
+      "heading": "Voluntariado",
+      "description": "Ofrécete para acompañar virtualmente a otras personas durante sus trayectos.",
+      "active": "Estás dada de alta como voluntaria",
+      "activeDescription": "Otras personas podrán elegirte como acompañante al activar «Voy contigo».",
+      "inactive": "No estás dada de alta",
+      "inactiveDescription": "Activa el voluntariado para aparecer en la lista de acompañantes disponibles.",
+      "toggleOn": "Darme de alta",
+      "toggleOff": "Darme de baja"
     }
   },
   "errors": {

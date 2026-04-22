@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   RoutePlannerProvider,
@@ -7,7 +8,11 @@ import {
 import AddressSearchInput from "../components/AddressSearchInput";
 import RouteMap from "../components/RouteMap";
 import RouteList from "../components/RouteList";
-import type { EndpointKind } from "../types/route";
+import DestinationPicker from "../components/DestinationPicker";
+import { useAuth } from "../auth/AuthContext";
+import { useContacts, useStoredVolunteers } from "../services/storage";
+import type { EndpointKind, Route } from "../types/route";
+import type { Recipient } from "../types/trip";
 
 export default function RouteRequestPage() {
   return (
@@ -19,6 +24,11 @@ export default function RouteRequestPage() {
 
 function RouteRequestScreen() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [contacts] = useContacts();
+  const [storedVolunteers] = useStoredVolunteers();
+
   const {
     origin,
     destination,
@@ -34,12 +44,12 @@ function RouteRequestScreen() {
     clearError,
   } = useRoutePlanner();
 
-  const [geolocating, setGeolocating] = useState(false);
+  const [geolocating, setGeolocating] = useState<boolean>(false);
   const [localErrorKey, setLocalErrorKey] = useState<string | null>(null);
+  const [pickerOpen, setPickerOpen] = useState<boolean>(false);
 
   const displayErrorKey = errorKey ?? localErrorKey;
 
-  // Auto-dismiss the error banner after a few seconds.
   useEffect(() => {
     if (!displayErrorKey) return undefined;
     const timeout = window.setTimeout(() => {
@@ -48,6 +58,11 @@ function RouteRequestScreen() {
     }, 6000);
     return () => window.clearTimeout(timeout);
   }, [displayErrorKey, clearError]);
+
+  const activeRoute = useMemo<Route | null>(
+    () => routes.find((r: Route) => r.id === activeRouteId) ?? null,
+    [routes, activeRouteId],
+  );
 
   const handleUseCurrentLocation = (): void => {
     if (!("geolocation" in navigator)) {
@@ -75,8 +90,15 @@ function RouteRequestScreen() {
     );
   };
 
+  const handleStartTrip = (recipient: Recipient): void => {
+    if (!activeRoute) return;
+    setPickerOpen(false);
+    navigate("/trip", { state: { route: activeRoute, recipient } });
+  };
+
   const canCompute = origin !== null && destination !== null;
   const hasRoutes = routes.length > 0;
+  const canStart = activeRoute !== null && user !== null;
 
   return (
     <section className="flex flex-1 flex-col lg:flex-row">
@@ -91,7 +113,7 @@ function RouteRequestScreen() {
         </header>
 
         <AddressSearchInput
-          kind="origin"
+          kind={"origin" as EndpointKind}
           value={origin}
           onSelect={(s) => setEndpoint("origin", s.point)}
           onClear={() => clearEndpoint("origin")}
@@ -100,7 +122,7 @@ function RouteRequestScreen() {
         />
 
         <AddressSearchInput
-          kind="destination"
+          kind={"destination" as EndpointKind}
           value={destination}
           onSelect={(s) => setEndpoint("destination", s.point)}
           onClear={() => clearEndpoint("destination")}
@@ -136,11 +158,32 @@ function RouteRequestScreen() {
             onChoose={chooseRoute}
           />
         </section>
+
+        {canStart && (
+          <button
+            type="button"
+            onClick={() => setPickerOpen(true)}
+            className="inline-flex min-h-tap w-full items-center justify-center rounded bg-green-600 px-4 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-green-600"
+          >
+            {t("trip.startTripCta")}
+          </button>
+        )}
       </aside>
 
-      <div className="relative h-[60vh] min-h-[400px] w-full flex-shrink-0 lg:h-auto lg:flex-1 lg:flex-shrink">
+      <div className="h-[60vh] min-h-[400px] w-full flex-shrink-0 lg:h-auto lg:flex-1 lg:flex-shrink">
         <RouteMap />
       </div>
+
+      {user && (
+        <DestinationPicker
+          isOpen={pickerOpen}
+          onCancel={() => setPickerOpen(false)}
+          onConfirm={handleStartTrip}
+          user={user}
+          contacts={contacts}
+          storedVolunteers={storedVolunteers}
+        />
+      )}
     </section>
   );
 }
@@ -157,7 +200,6 @@ function EndpointToggle({
     { value: "origin", labelKey: "route.toggle.placeOrigin" },
     { value: "destination", labelKey: "route.toggle.placeDestination" },
   ];
-
   return (
     <div className="flex flex-col gap-1">
       <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">

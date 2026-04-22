@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth/AuthContext";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -24,6 +24,18 @@ export default function TopBar() {
         </Link>
 
         <div className="flex items-center gap-2">
+          {isAuthenticated && (
+            <NavLink
+              to="/profile"
+              className={({ isActive }) =>
+                `min-h-tap hidden rounded px-3 py-2 text-sm font-semibold hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white sm:inline-flex sm:items-center ${
+                  isActive ? "bg-white text-urjc-red" : "text-white"
+                }`
+              }
+            >
+              {t("nav.profile")}
+            </NavLink>
+          )}
           <LanguageSwitcher />
           {isAuthenticated && (
             <button

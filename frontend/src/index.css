@@ -6,6 +6,7 @@
 .leaflet-container {
   height: 100%;
   width: 100%;
+  min-height: 320px;
 }
 
 /* Global focus styles — accessibility (RNF-08). */
@@ -28,5 +29,18 @@
       "Segoe UI",
       Roboto,
       sans-serif;
+    @apply bg-gray-50 text-gray-900 antialiased;
+  }
+}
+
+/* Pulse animation used by the user marker in TripMap (iteration 3). */
+@keyframes senda-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
   }
 }
