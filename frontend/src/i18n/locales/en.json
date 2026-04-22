@@ -10,6 +10,7 @@
     "profile": "Profile",
     "reportIncident": "Report incident",
     "admin": "Administration",
+    "stats": "Statistics",
     "securityService": "Security Service",
     "maintenanceService": "Maintenance Service",
     "logout": "Sign out"
@@ -64,9 +65,7 @@
       "placeOrigin": "Origin",
       "placeDestination": "Destination"
     },
-    "map": {
-      "label": "Route planning map"
-    },
+    "map": { "label": "Route planning map" },
     "list": {
       "heading": "Proposed routes",
       "empty": "Set origin and destination, then tap «Calculate route».",
@@ -78,11 +77,7 @@
       "alternative1": "Alternative 1",
       "alternative2": "Alternative 2"
     },
-    "safety": {
-      "high": "High",
-      "medium": "Medium",
-      "low": "Low"
-    },
+    "safety": { "high": "High", "medium": "Medium", "low": "Low" },
     "metrics": {
       "isp": "PSI",
       "distance": "Distance",
@@ -186,16 +181,13 @@
       "markResolved": "Mark as resolved",
       "resolved": "Resolved"
     },
-    "links": {
-      "adjustThresholds": "Adjust prealert thresholds in Profile"
-    },
-    "values": {
-      "secondsAgo": "{{value}} s ago"
-    }
+    "links": { "adjustThresholds": "Adjust prealert thresholds in Profile" },
+    "values": { "secondsAgo": "{{value}} s ago" }
   },
   "profile": {
     "heading": "Profile",
     "subheading": "{{name}} · {{email}}",
+    "retentionNotice": "Incident and alert histories are kept for a maximum of 24 hours.",
     "contacts": {
       "heading": "Trusted contacts",
       "description": "People who will receive alert notifications during a trip.",
@@ -272,12 +264,8 @@
       "continue": "Continue",
       "success": "Incident reported. Thanks for helping improve campus safety."
     },
-    "fab": {
-      "label": "Report an incident during the trip"
-    },
-    "errors": {
-      "missingCategory": "Pick an incident type to continue."
-    }
+    "fab": { "label": "Report an incident during the trip" },
+    "errors": { "missingCategory": "Pick an incident type to continue." }
   },
   "tickets": {
     "status": {
@@ -298,10 +286,7 @@
     "closeNoteLabel": "Resolution note (optional)"
   },
   "alerts": {
-    "status": {
-      "active": "Active",
-      "resolved": "Resolved"
-    },
+    "status": { "active": "Active", "resolved": "Resolved" },
     "reason": "Reason",
     "reasons": {
       "pause": "Extended pause",
@@ -313,9 +298,7 @@
     "recipient": "Companion",
     "noRecipient": "No companion",
     "location": "Location",
-    "actions": {
-      "resolve": "Mark as resolved"
-    }
+    "actions": { "resolve": "Mark as resolved" }
   },
   "admin": {
     "heading": "Administration panel",
@@ -342,6 +325,31 @@
     "ticketsHeading": "Assigned tickets ({{count}})",
     "noTickets": "No tickets assigned to the Maintenance Service."
   },
+  "stats": {
+    "heading": "Statistics",
+    "subheading": "Aggregated, anonymised summary of in-app activity on this device.",
+    "kpiHeading": "Headline indicators",
+    "kpi": {
+      "totalTickets": "Total tickets",
+      "openTickets": "Open tickets",
+      "totalAlerts": "Total alerts",
+      "activeAlerts": "Active alerts"
+    },
+    "charts": {
+      "totalLabel": "Total",
+      "byCategory": "Tickets by category",
+      "byCategoryHint": "Number of incidents reported for each category.",
+      "byCategoryAria": "Tickets by category. {{summary}}.",
+      "byStatus": "Tickets by status",
+      "byStatusHint": "Share of tickets by current status.",
+      "byStatusAria": "Tickets by status. {{summary}}.",
+      "byReason": "Alerts by reason",
+      "byReasonHint": "Distribution of escalated alerts by the reason that triggered them.",
+      "lastWeek": "Last 7 days activity",
+      "lastWeekHint": "Tickets created each day during the last week.",
+      "lastWeekAria": "Last 7 days activity. {{summary}}."
+    }
+  },
   "errors": {
     "outOfCoverage": "That point is outside the coverage perimeter (500 m around the URJC campuses).",
     "missingEndpoints": "You need both origin and destination before calculating a route.",
@@ -350,7 +358,5 @@
     "geolocationDenied": "Location access was denied.",
     "geolocationFailed": "Could not retrieve your location. Try again."
   },
-  "language": {
-    "switchTo": "Change language"
-  }
+  "language": { "switchTo": "Change language" }
 }

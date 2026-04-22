@@ -11,13 +11,11 @@ import AdminPage from "./pages/AdminPage";
 import SecurityPage from "./pages/SecurityPage";
 import MaintenancePage from "./pages/MaintenancePage";
 import IncidentReportPage from "./pages/IncidentReportPage";
+import StatsPage from "./pages/StatsPage";
 import { useAuth } from "./auth/AuthContext";
 import { rolePath } from "./types/incidents";
+import { useDataRetention } from "./services/retention";
 
-/**
- * Home for the '/' path: renders the user HomePage for regular users
- * and redirects to the role-specific landing for the other roles.
- */
 function RoleHome() {
   const { user } = useAuth();
   if (!user) return <Navigate to="/login" replace />;
@@ -26,6 +24,9 @@ function RoleHome() {
 }
 
 export default function App() {
+  // Purge expired tickets and alerts on mount and then hourly (RNF-18).
+  useDataRetention();
+
   return (
     <BrowserRouter>
       <Routes>
@@ -44,6 +45,7 @@ export default function App() {
 
             <Route element={<RoleGuard allowedRoles={["admin"]} />}>
               <Route path="/admin" element={<AdminPage />} />
+              <Route path="/stats" element={<StatsPage />} />
             </Route>
 
             <Route element={<RoleGuard allowedRoles={["security"]} />}>

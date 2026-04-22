@@ -16,7 +16,10 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
     { to: "/profile", key: "nav.profile" },
     { to: "/incidents/new", key: "nav.reportIncident" },
   ],
-  admin: [{ to: "/admin", key: "nav.admin" }],
+  admin: [
+    { to: "/admin", key: "nav.admin" },
+    { to: "/stats", key: "nav.stats" },
+  ],
   security: [{ to: "/security", key: "nav.securityService" }],
   maintenance: [{ to: "/maintenance", key: "nav.maintenanceService" }],
 };

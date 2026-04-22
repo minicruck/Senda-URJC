@@ -10,6 +10,7 @@
     "profile": "Perfil",
     "reportIncident": "Reportar incidencia",
     "admin": "Administración",
+    "stats": "Estadísticas",
     "securityService": "Servicio de Seguridad",
     "maintenanceService": "Servicio de Mantenimiento",
     "logout": "Cerrar sesión"
@@ -64,9 +65,7 @@
       "placeOrigin": "Origen",
       "placeDestination": "Destino"
     },
-    "map": {
-      "label": "Mapa de selección de ruta"
-    },
+    "map": { "label": "Mapa de selección de ruta" },
     "list": {
       "heading": "Rutas propuestas",
       "empty": "Indica origen y destino, y pulsa «Calcular ruta».",
@@ -78,11 +77,7 @@
       "alternative1": "Alternativa 1",
       "alternative2": "Alternativa 2"
     },
-    "safety": {
-      "high": "Alto",
-      "medium": "Medio",
-      "low": "Bajo"
-    },
+    "safety": { "high": "Alto", "medium": "Medio", "low": "Bajo" },
     "metrics": {
       "isp": "ISP",
       "distance": "Distancia",
@@ -186,16 +181,13 @@
       "markResolved": "Marcar como resuelta",
       "resolved": "Resuelta"
     },
-    "links": {
-      "adjustThresholds": "Ajustar umbrales de prealerta en Perfil"
-    },
-    "values": {
-      "secondsAgo": "hace {{value}} s"
-    }
+    "links": { "adjustThresholds": "Ajustar umbrales de prealerta en Perfil" },
+    "values": { "secondsAgo": "hace {{value}} s" }
   },
   "profile": {
     "heading": "Perfil",
     "subheading": "{{name}} · {{email}}",
+    "retentionNotice": "Los historiales de incidencias y alertas se conservan durante un máximo de 24 horas.",
     "contacts": {
       "heading": "Contactos de confianza",
       "description": "Personas que recibirán notificaciones de alerta durante un trayecto.",
@@ -272,9 +264,7 @@
       "continue": "Continuar",
       "success": "Incidencia registrada. Gracias por ayudar a mejorar la seguridad del campus."
     },
-    "fab": {
-      "label": "Reportar una incidencia durante el trayecto"
-    },
+    "fab": { "label": "Reportar una incidencia durante el trayecto" },
     "errors": {
       "missingCategory": "Selecciona un tipo de incidencia para continuar."
     }
@@ -298,10 +288,7 @@
     "closeNoteLabel": "Nota de resolución (opcional)"
   },
   "alerts": {
-    "status": {
-      "active": "Activa",
-      "resolved": "Atendida"
-    },
+    "status": { "active": "Activa", "resolved": "Atendida" },
     "reason": "Motivo",
     "reasons": {
       "pause": "Parada prolongada",
@@ -313,9 +300,7 @@
     "recipient": "Acompañante",
     "noRecipient": "Sin acompañante",
     "location": "Ubicación",
-    "actions": {
-      "resolve": "Marcar como atendida"
-    }
+    "actions": { "resolve": "Marcar como atendida" }
   },
   "admin": {
     "heading": "Panel de administración",
@@ -342,6 +327,31 @@
     "ticketsHeading": "Tickets asignados ({{count}})",
     "noTickets": "No hay tickets asignados al Servicio de Mantenimiento."
   },
+  "stats": {
+    "heading": "Estadísticas",
+    "subheading": "Resumen agregado y anónimo de la actividad de la aplicación en este dispositivo.",
+    "kpiHeading": "Indicadores principales",
+    "kpi": {
+      "totalTickets": "Tickets totales",
+      "openTickets": "Tickets abiertos",
+      "totalAlerts": "Alertas totales",
+      "activeAlerts": "Alertas activas"
+    },
+    "charts": {
+      "totalLabel": "Total",
+      "byCategory": "Tickets por categoría",
+      "byCategoryHint": "Número de incidencias registradas en cada categoría.",
+      "byCategoryAria": "Tickets por categoría. {{summary}}.",
+      "byStatus": "Tickets por estado",
+      "byStatusHint": "Proporción de tickets según su estado actual.",
+      "byStatusAria": "Tickets por estado. {{summary}}.",
+      "byReason": "Alertas por motivo",
+      "byReasonHint": "Distribución de las alertas escaladas según el motivo que las originó.",
+      "lastWeek": "Actividad últimos 7 días",
+      "lastWeekHint": "Tickets creados cada día durante la última semana.",
+      "lastWeekAria": "Actividad de los últimos 7 días. {{summary}}."
+    }
+  },
   "errors": {
     "outOfCoverage": "El punto está fuera del perímetro de cobertura (500 m alrededor de los campus de la URJC).",
     "missingEndpoints": "Necesitas indicar origen y destino antes de calcular la ruta.",
@@ -350,7 +360,5 @@
     "geolocationDenied": "Has denegado el acceso a la ubicación.",
     "geolocationFailed": "No se pudo obtener tu ubicación. Inténtalo otra vez."
   },
-  "language": {
-    "switchTo": "Cambiar idioma"
-  }
+  "language": { "switchTo": "Cambiar idioma" }
 }

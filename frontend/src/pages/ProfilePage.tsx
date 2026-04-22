@@ -39,6 +39,10 @@ export default function ProfilePage() {
         storedVolunteers={volunteers}
         onChange={setVolunteers}
       />
+
+      <p className="border-t border-gray-200 pt-4 text-xs text-gray-500">
+        {t("profile.retentionNotice")}
+      </p>
     </section>
   );
 }

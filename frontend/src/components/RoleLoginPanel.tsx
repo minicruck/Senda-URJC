@@ -46,7 +46,7 @@ export default function RoleLoginPanel({
         {t("login.roles.description")}
       </p>
 
-      <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <ul className="mt-3 flex flex-col gap-3">
         {ROLES.map((role: Role) => {
           const busy = pendingRole === role;
           return (
@@ -56,10 +56,12 @@ export default function RoleLoginPanel({
                 onClick={() => handleClick(role)}
                 disabled={disabled || pendingRole !== null}
                 aria-busy={busy}
-                className="flex min-h-tap w-full items-center justify-between gap-2 rounded border border-gray-300 bg-white px-3 py-2 text-left text-sm font-medium text-gray-800 transition-colors hover:border-urjc-red hover:bg-urjc-red/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-urjc-red disabled:opacity-60"
+                className="flex w-full items-center justify-between gap-3 rounded border border-gray-300 bg-white px-4 py-3 text-left text-sm font-medium text-gray-800 transition-colors hover:border-urjc-red hover:bg-urjc-red/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-urjc-red disabled:opacity-60"
               >
-                <span>{t(`login.roles.as.${role}`)}</span>
-                <RoleBadge role={role} />
+                <span className="flex-1">{t(`login.roles.as.${role}`)}</span>
+                <span className="shrink-0">
+                  <RoleBadge role={role} />
+                </span>
               </button>
             </li>
           );

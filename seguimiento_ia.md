@@ -41,8 +41,8 @@ del historial de claude.ai y pegar completo ...]
 
 **Prompts correctivos posteriores (mismo hilo):**
 
-- _Aviso 1:_ instrucción para no usar `: JSX.Element` como tipo de retorno en componentes funcionales, incompatible con React 19 + TypeScript actual.
-- _Aviso 2:_ instrucción para que, cuando el prompt contemple ficheros placeholder (como iconos binarios), se genere su contenido real o se advierta claramente de que quedan pendientes de ser creados por el equipo.
+- *Aviso 1:* instrucción para no usar `: JSX.Element` como tipo de retorno en componentes funcionales, incompatible con React 19 + TypeScript actual.
+- *Aviso 2:* instrucción para que, cuando el prompt contemple ficheros placeholder (como iconos binarios), se genere su contenido real o se advierta claramente de que quedan pendientes de ser creados por el equipo.
 
 **Contexto proporcionado:**
 
@@ -97,7 +97,7 @@ Ficheros modificados:
   - **PWA no instalable por ausencia de iconos.** El prompt contemplaba iconos placeholder en `frontend/public/icons/` pero la respuesta no generó el contenido real de los PNG, únicamente indicó sus rutas. Chrome DevTools → Application → Manifest reportaba "Icon ... failed to load" para ambos tamaños y el mensaje "Installability: No supplied icon is at least 144 pixels square", por lo que el botón de instalar no aparecía en la barra de direcciones.
 
 - **Correcciones aplicadas:**
-  - **TS2503:** eliminación del tipo de retorno `: JSX.Element` en los 10 ficheros afectados (`App.tsx`, `AuthContext.tsx`, `LanguageSwitcher.tsx`, `Layout.tsx`, `MapView.tsx`, `ProtectedRoute.tsx`, `TopBar.tsx`, `HomePage.tsx`, `LoginPage.tsx`, `RouteRequestPage.tsx`) mediante _Find & Replace_ en VS Code. TypeScript infiere el tipo de retorno desde el JSX devuelto, lo que además se considera mejor estilo en la versión actual. Se envió a Claude un mensaje correctivo para que no reintroduzca el patrón en iteraciones futuras.
+  - **TS2503:** eliminación del tipo de retorno `: JSX.Element` en los 10 ficheros afectados (`App.tsx`, `AuthContext.tsx`, `LanguageSwitcher.tsx`, `Layout.tsx`, `MapView.tsx`, `ProtectedRoute.tsx`, `TopBar.tsx`, `HomePage.tsx`, `LoginPage.tsx`, `RouteRequestPage.tsx`) mediante *Find & Replace* en VS Code. TypeScript infiere el tipo de retorno desde el JSX devuelto, lo que además se considera mejor estilo en la versión actual. Se envió a Claude un mensaje correctivo para que no reintroduzca el patrón en iteraciones futuras.
   - **Iconos PWA:** generación manual de los dos PNG (192×192 y 512×512, fondo `#C00000`, texto "SU" en blanco centrado) y ubicación en `frontend/public/icons/`. Tras recompilar con `npm run build && npm run preview`, el manifest se validó sin errores, el Service Worker se mantuvo activado y el botón de instalar apareció correctamente en la barra de direcciones. Al pulsarlo, la aplicación se instala como ventana independiente. Se envió a Claude un mensaje correctivo para que en lo sucesivo, cuando contemple ficheros placeholder, los genere explícitamente o advierta de su ausencia.
 
 **Decisiones de diseño:**
@@ -146,7 +146,7 @@ del historial de claude.ai y pegar completo ...]
 
 **Prompts correctivos posteriores (mismo hilo):**
 
-- _Aviso 3:_ instrucción sobre tres problemas detectados en el código generado: contenedor del mapa que colapsa a altura cero en vista móvil/tablet, parámetros sin tipar que provocan TS7006 con `strict: true`, y referencias incorrectas a la versión del ERS (v7.0 en lugar de v8.0).
+- *Aviso 3:* instrucción sobre tres problemas detectados en el código generado: contenedor del mapa que colapsa a altura cero en vista móvil/tablet, parámetros sin tipar que provocan TS7006 con `strict: true`, y referencias incorrectas a la versión del ERS (v7.0 en lugar de v8.0).
 
 **Contexto proporcionado:**
 
@@ -263,7 +263,7 @@ del historial de claude.ai y pegar completo ...]
 
 **Prompts correctivos posteriores (mismo hilo):**
 
-- _Aviso 4:_ aclaración sobre una respuesta incompleta. La primera versión de la iteración 3 que generó Claude omitió los siete ficheros fundacionales (tipos, servicios, hook `useTripRuntime`, componente `DestinationPicker`) e incluyó una línea del `TileLayer` con un artefacto `.replace(' ', '')` que corrompía la URL de tiles. Se solicitó explícitamente la regeneración de los ficheros omitidos y la iteración completa se volvió a lanzar.
+- *Aviso 4:* aclaración sobre una respuesta incompleta. La primera versión de la iteración 3 que generó Claude omitió los siete ficheros fundacionales (tipos, servicios, hook `useTripRuntime`, componente `DestinationPicker`) e incluyó una línea del `TileLayer` con un artefacto `.replace(' ', '')` que corrompía la URL de tiles. Se solicitó explícitamente la regeneración de los ficheros omitidos y la iteración completa se volvió a lanzar.
 
 **Contexto proporcionado:**
 
@@ -394,8 +394,8 @@ del historial de claude.ai y pegar completo ...]
 
 **Prompts correctivos posteriores (mismo hilo):**
 
-- _Aviso preventivo integrado en el propio prompt:_ "al generar iteraciones grandes, asegúrate de incluir todos los ficheros fundacionales y no empezar por los componentes asumiendo que los demás están resueltos". Evitó el error de la iteración 3: Claude empezó la respuesta por `types/incidents.ts` → `services/tickets.ts` → `services/alerts.ts` → `hooks/useTripRuntime.tsx` (modificado) → componentes → páginas → i18n, en ese orden, con todas las exports coherentes entre sí.
-- _Aviso 5:_ instrucción sobre la inclusión indebida de códigos del ERS (RF-XX, RNF-XX, CU-XX) en cadenas i18n visibles por el usuario final. Seis cadenas afectadas detectadas y corregidas manualmente. Se indica a Claude que la trazabilidad entre ERS y prototipo debe mantenerse exclusivamente en `seguimiento_ia.md` y en comentarios de código, nunca en la UI.
+- *Aviso preventivo integrado en el propio prompt:* "al generar iteraciones grandes, asegúrate de incluir todos los ficheros fundacionales y no empezar por los componentes asumiendo que los demás están resueltos". Evitó el error de la iteración 3: Claude empezó la respuesta por `types/incidents.ts` → `services/tickets.ts` → `services/alerts.ts` → `hooks/useTripRuntime.tsx` (modificado) → componentes → páginas → i18n, en ese orden, con todas las exports coherentes entre sí.
+- *Aviso 5:* instrucción sobre la inclusión indebida de códigos del ERS (RF-XX, RNF-XX, CU-XX) en cadenas i18n visibles por el usuario final. Seis cadenas afectadas detectadas y corregidas manualmente. Se indica a Claude que la trazabilidad entre ERS y prototipo debe mantenerse exclusivamente en `seguimiento_ia.md` y en comentarios de código, nunca en la UI.
 
 **Contexto proporcionado:**
 
@@ -492,3 +492,173 @@ Ficheros modificados:
 - **Vista detalle de ticket** con mapa embebido, histórico de cambios de estado y botones de "marcar en curso" (RF-46, RF-47).
 - **Iconos PWA para iOS** (rutas `apple-touch-icon`), pendiente desde la iteración 1.
 - **Sustitución de los servicios locales por clientes HTTP** cuando exista backend real, manteniendo los hooks `useTickets` / `useAlerts` como fachada.
+
+---
+
+### Iteración 5: Estadísticas, retención de datos y tests unitarios
+
+**Fecha:** 22/04/2026
+
+**Objetivo:** Cierre técnico del prototipo evolutivo con tres bloques independientes y acotados: (a) pantalla `/stats` solo para rol `admin` con KPIs y cuatro gráficos SVG inline (barras, donut, lista proporcional y heatmap de 7 días), (b) retención automática de datos bajo RNF-18 mediante purga de tickets y alertas más antiguos de 24 h, (c) suite de tests unitarios con Vitest sobre los siete servicios puros más críticos (`coverage`, `routing`, `monitoring`, `trip`, `tickets`, `alerts`, `retention`).
+
+**Requisitos cubiertos:**
+
+- RF-51 Visualización de estadísticas agregadas por categoría, estado y actividad temporal.
+- RF-52 Panel estadístico accesible para el personal administrador.
+- RNF-18 Retención máxima del historial local durante 24 horas.
+- RNF-29 Presentación de estadísticas sin exposición de identidad individual (todos los agregados muestran recuentos totales, nunca campos identificadores).
+- RNF-30 Acceso restringido por rol al panel estadístico (solo `admin`).
+
+Casos de uso del ERS afectados: CU-20 (Consultar estadísticas agregadas), parcialmente; la visualización queda implementada, los filtros por rango temporal y zona quedan fuera del alcance del prototipo.
+
+**Prompt empleado:**
+
+```
+# Iteración 5 — Estadísticas, retención de datos y tests unitarios
+
+[... resto del prompt literal tal y como se envió a Claude; recuperar
+del historial de claude.ai y pegar completo ...]
+```
+
+**Prompts correctivos posteriores (mismo hilo):** ninguno. Las cinco instrucciones previas (avisos 1 a 5) se integraron como restricciones explícitas en el propio prompt y Claude las respetó sin desviaciones. La respuesta llegó ordenada (servicios → tests → componentes → página → rutas/TopBar/Profile → i18n), completa y coherente entre sí; no hubo que regenerar nada.
+
+**Contexto proporcionado:**
+
+- ERS v8.0 del proyecto.
+- Diagramas UML (casos de uso, clases y estados en formato SVG).
+- Estado del repositorio tras la iteración 4 (prototipo funcionalmente cerrado con cuatro roles, reporte de incidencias, paneles admin/security/maintenance, reverse-geocoding en `/routes`, i18n ES/EN, PWA).
+- Decisiones de alcance acordadas con el equipo antes del prompt: (1) `/stats` solo admin, (2) retención de 24 h implementada como purga al montar la app y cada hora, (3) tests únicamente sobre servicios puros (no componentes). RF-39 y RF-40 se dejan fuera conscientemente por las razones documentadas en la iteración 4.
+
+**Artefactos generados:**
+
+Ficheros nuevos:
+
+- `frontend/src/services/retention.ts` — función `purgeExpiredData(maxAgeMs)` que filtra en `localStorage` las claves `senda.tickets` (por `createdAt`) y `senda.alerts` (por `triggeredAt`) y reescribe el array resultante; emite `CustomEvent 'senda:storage'` solo cuando realmente hay cambios, de modo que los hooks `useTickets` / `useAlerts` se refrescan automáticamente. Constante exportada `RETENTION_MAX_AGE_MS = 24 * 60 * 60 * 1000` y hook `useDataRetention()` que ejecuta la purga al montar y cada hora mientras viva la app.
+- `frontend/src/services/coverage.test.ts` — 8 tests: `haversineDistance` devuelve 0 para el mismo punto, ≈ 500 m entre dos puntos conocidos a esa distancia, simetría; `isWithinCoverage` acepta Móstoles, rechaza Puerta del Sol, respeta el límite en 499 m vs 501 m, constante `COVERAGE_RADIUS_METERS = 500`.
+- `frontend/src/services/routing.test.ts` — 11 tests: `calculateRoutes` devuelve exactamente 3 rutas, con ≥2 waypoints cada una, labels distintos (`principal`/`alternative1`/`alternative2`), ordenadas por ISP descendente; `classifySafety` con los seis bordes (70, 69, 40, 39) y tres muestras (80, 50, 20).
+- `frontend/src/services/monitoring.test.ts` — 5 tests: `detectAnomaly` devuelve `null` cuando todo está bien, `'pause'` al alcanzar y superar el umbral, `'deviation'` al salirse de la ruta ~200 m, y prioriza `deviation` sobre `pause` cuando ambas se cumplen (comportamiento ya implícito en iter 3, ahora fijado por test).
+- `frontend/src/services/trip.test.ts` — 4 tests: `buildTripTrack` devuelve samples con `atSec` no decreciente desde 0, la duración total coincide con `distancia / velocidad` ± 2 s de tolerancia por el redondeo interno, cada sample tiene coordenadas numéricas finitas, primer sample en el origen y último cerca del destino.
+- `frontend/src/services/tickets.test.ts` — 6 tests con `vi.stubGlobal('localStorage', ...)`: carga vacía, `appendTicket` persiste con `status: 'open'` y `createdAt` reciente, `assignTicket` pasa a `assigned_security` / `assigned_maintenance`, `closeTicket` graba `status: 'closed'`, `resolutionNote` y `resolvedAt`, orden descendente por `createdAt` verificado con `vi.useFakeTimers`.
+- `frontend/src/services/alerts.test.ts` — 4 tests análogos: `loadAlerts` vacío, `appendAlert` con `status: 'active'` y `triggeredAt` reciente, `resolveAlert` con `status: 'resolved'` + `resolvedAt`, orden descendente por `triggeredAt`.
+- `frontend/src/services/retention.test.ts` — 6 tests: no hace nada si no hay datos, respeta elementos recientes, elimina tickets/alertas anteriores a `now - maxAge`, emite `senda:storage` cuando purga y **no** lo emite cuando no hay cambios (caso importante para no provocar repintados innecesarios).
+- `frontend/vitest.config.ts` — configuración mínima (`environment: 'jsdom'`, `globals: true`, `include: ['src/**/*.test.ts']`, `unstubGlobals: true`, `clearMocks: true`).
+- `frontend/src/pages/StatsPage.tsx` — cabecera con título y subtítulo, cuatro `KpiCard` arriba en rejilla responsive (1 columna móvil → 4 desktop), gráfico de barras horizontales por categoría, donut por estado, lista ordenada de alertas por motivo con barras proporcionales inline, heatmap lineal de 7 días. Todas las agregaciones se calculan con `useMemo` a partir de `useTickets()` y `useAlerts()`; los gráficos son *stateless*.
+- `frontend/src/components/KpiCard.tsx` — tarjeta KPI con variantes `default` y `urgent` (borde + número rojos) y `hint` opcional.
+- `frontend/src/components/CategoryBarChart.tsx` — SVG con `role="img"` y `aria-label`; cuatro barras horizontales coloreadas con los mismos tonos del `IncidentCategoryPicker` de la iteración 4 (amarillo, morado, naranja, azul). Barras con `opacity: 0.25` cuando el recuento es cero.
+- `frontend/src/components/StatusDonut.tsx` — donut SVG generado a mano con `M … L … A …` (sin librerías), leyenda lateral con cuenta y porcentaje, total centrado en el hueco. Caso especial de "una sola categoría = 100 %" resuelto con `<circle>` completo.
+- `frontend/src/components/ActivityHeatmap.tsx` — heatmap lineal de siete celdas; color interpolado entre blanco-rosáceo y rojo corporativo `#C00000` según intensidad; fecha formateada con `Intl.DateTimeFormat` y locale activo.
+
+Ficheros modificados:
+
+- `frontend/src/App.tsx` — `useDataRetention()` invocado una sola vez al montar; ruta nueva `/stats` dentro del grupo `RoleGuard allowedRoles={['admin']}`.
+- `frontend/src/components/TopBar.tsx` — añadido enlace `"Estadísticas"` a `NAV_BY_ROLE.admin`.
+- `frontend/src/pages/ProfilePage.tsx` — línea informativa discreta al pie: "Los historiales de incidencias y alertas se conservan durante un máximo de 24 horas." (EN equivalente).
+- `frontend/src/i18n/locales/es.json` y `en.json` — todas las cadenas nuevas de `/stats` (título, subtítulo, KPIs, títulos y hints de cada gráfico, resúmenes `aria-label`) y la nota de retención en `/profile`.
+- `frontend/package.json` — nuevos scripts `"test": "vitest run"` y `"test:watch": "vitest"`; nuevas `devDependencies`: `vitest@^3`, `jsdom@^25`, `@types/node@^20`. Instalación con `--legacy-peer-deps` por consistencia con `vite-plugin-pwa`.
+
+**Evaluación:**
+
+- **Correctas:**
+  - Tests 100 % verdes al primer intento: 7 suites, 44 tests, ~3,4 s de ejecución total. `npm run test` ejecuta limpiamente sin configuración adicional.
+  - Gráficos SVG inline sin ninguna dependencia de gráficos (ni `recharts`, ni `d3`, ni `chart.js`, ni `plotly`). El bundle sube muy poco respecto a iter 4.
+  - Accesibilidad de los gráficos: cada `<svg>` tiene `role="img"` y `aria-label` con el resumen textual equivalente ("Tickets por categoría. Farola fundida: 2, Zona solitaria: 1, …"), interpretable por lectores de pantalla.
+  - `purgeExpiredData` idempotente: ejecutarlo varias veces sin cambios en `localStorage` no emite evento, no provoca repintados ni rehidrata los hooks.
+  - `useDataRetention()` invocado desde `App.tsx`, no desde `AuthProvider`, para que la purga corra siempre que la app esté viva, con sesión o sin ella.
+  - Tests con `vi.stubGlobal('localStorage', ...)` totalmente independientes del navegador; `vi.useFakeTimers` únicamente donde hace falta (tests de orden), sin acoplar el resto a un reloj simulado.
+  - `unstubGlobals: true` en `vitest.config.ts` como red de seguridad adicional a los `afterEach(() => vi.unstubAllGlobals())` de cada suite.
+  - Cumplimiento estricto de las cinco instrucciones correctivas acumuladas: ningún `: JSX.Element`, callbacks tipados, layouts con altura explícita en breakpoints pequeños, todos los ficheros fundacionales incluidos desde el inicio, ninguna referencia a códigos RF/CU en la UI.
+
+- **Parciales:**
+  - **Agregados solo del cliente.** `/stats` lee `localStorage` del navegador actual; un despliegue real centralizaría los datos en un backend. En el prototipo no se puede mostrar "zonas con más avisos" o "horas con mayor incidencia" con granularidad estadística significativa al no haber datos multiusuario.
+  - **Sin anonimización estructural (RNF-29).** El ERS exige que las estadísticas sean anónimas. Los agregados que muestra el panel ya son totales/recuentos sin identificadores, pero conviven en el mismo almacén que los tickets individuales, que sí llevan nombre y correo de quien reportó. Un backend real guardaría los agregados ya desacoplados.
+  - **Sin filtros de rango temporal ni de campus en `/stats`.** CU-20 menciona filtros avanzados; el prototipo entrega vista global y heatmap fijo de 7 días.
+  - **Sin tests de componentes.** Vitest + `jsdom` permitirían ejercitar `KpiCard`, `StatusDonut`, `CategoryBarChart` y `ActivityHeatmap`, pero el alcance acordado fue solo los servicios puros.
+  - **La purga solo corre mientras la app esté abierta.** Si una persona no abre la app durante varios días, la limpieza se demora hasta su siguiente visita. Un backend lo resolvería con tareas programadas.
+  - **Retención excluye `senda.contacts`, `senda.volunteers`, `senda.thresholds`.** Son configuración deliberada del usuario, no historial; RNF-18 solo alcanza al historial de rutas, incidencias y alertas.
+
+- **Fallidas:** tres tropiezos detectados durante la integración, ninguno atribuible a la calidad del código generado por Claude. Ver "Incidencias adicionales de integración".
+
+- **Correcciones aplicadas:**
+  - **Error de encoding con BOM UTF-8.** Los ficheros nuevos (especialmente `StatsPage.tsx`, `KpiCard.tsx`, `StatusDonut.tsx`) fueron guardados por VS Code con BOM al inicio. El BOM hace que TypeScript no reconozca el primer carácter del módulo y reporte "no default export" aunque la firma `export default function` sea correcta. Solución: tras descartar las hipótesis de contenido (el fichero ya tenía `export default function StatsPage()` en la línea 47), se ejecutó un script masivo de PowerShell que recorre `src/**/*.tsx` y `src/**/*.ts`, detecta el BOM (`\uFEFF`) al inicio y reescribe cada fichero en UTF-8 sin BOM usando `System.IO.File.WriteAllText` con `UTF8Encoding($false)`. Tras la ejecución, `npm run build` compiló limpio. Se recomienda dejar en `.vscode/settings.json` del repo:
+    ```json
+    {
+      "files.encoding": "utf8",
+      "files.autoGuessEncoding": false
+    }
+    ```
+    para evitar la reincidencia.
+  - **Desborde visual en `RoleLoginPanel` con textos largos en español.** La primera versión generada por Claude usaba una rejilla de 2 columnas × 2 filas con `justify-between`. Con textos cortos como "Security" y "User" en inglés (versión que Claude probablemente visualizó al diseñar) funcionaba, pero en español "Personal administrador" y "Servicio de Mantenimiento" se partían en dos líneas y desbordaban verticalmente el botón, pisando visualmente el botón de la fila inferior. Iteraciones correctivas descartadas: (1) aumentar altura mínima y alineación `items-start` — sigue desbordando; (2) usar `min-w-0 + flex-1` en el texto — alinea pero no soluciona la altura combinada. Solución definitiva: sustituir la rejilla 2×2 por **una lista vertical de una sola columna**. Los textos caben en una línea, el badge queda alineado a la derecha con `justify-between`, la accesibilidad se mantiene y la altura del panel crece de forma coherente sin superposiciones. No se considera un "aviso 6" para Claude por ser un problema local de un componente concreto, no un patrón generalizable.
+
+**Incidencias adicionales de integración (no atribuibles a la IA):**
+
+- **Error TS1192 "has no default export" fantasma (BOM UTF-8).** Tres intentos de diagnóstico antes de dar con la causa. Primero se sospechó del contenido (descartado al comprobar que la firma `export default function StatsPage()` era correcta); después de cache obsoleta de TypeScript (se limpiaron `node_modules/.tmp`, `dist/` y `.tsbuildinfo` sin éxito); finalmente, tras recrear el fichero desde VS Code y ver que el error se movía al siguiente fichero nuevo (`KpiCard.tsx` → `StatusDonut.tsx`), se identificó el BOM como causa. Ver "Correcciones aplicadas" para el script de limpieza.
+- **Build warning: chunk > 500 kB.** El build final pesa `564 kB` (gzip: `167 kB`), por encima del umbral por defecto de Vite. Es un warning informativo, no un error. Se resolvería con code-splitting vía `React.lazy` para `/stats`, `/admin`, `/security` y `/maintenance` (que solo se cargan cuando el rol correspondiente inicia sesión). Queda como mejora futura.
+- **Compatibilidad entre `AlertPayload.triggeredAt: string` (iter 3) y `AlertRecord.triggeredAt: number` (iter 4).** Se detectó durante la revisión del nuevo `useEffect` de persistencia de alertas en `useTripRuntime`. No rompe el build porque `appendAlert` calcula su propio `triggeredAt = Date.now()` internamente e ignora el campo entrante, pero queda como deuda técnica: unificar ambos tipos a `number` en una iteración futura.
+
+**Decisiones de diseño:**
+
+- **Gráficos SVG a mano, sin librería externa.** Cada componente exporta su propia interfaz de datos (`CategoryBarDatum`, `DonutSlice`, `HeatmapDay`) para que la página agregue una sola vez con `useMemo` y los gráficos permanezcan *stateless* y testeables. Alternativa descartada: `recharts`. Ahorra ~400 kB de bundle y queda un código didácticamente mucho más transparente, coherente con un prototipo académico.
+- **`useDataRetention` en `App.tsx`, no en `AuthProvider`.** Así la purga corre desde que la app monta, con sesión o sin ella (a la larga no hace diferencia, pero es más claro que un `useEffect` en el provider de auth). `StrictMode` ejecuta el `useEffect` dos veces en dev; como `purgeExpiredData` es idempotente, no importa.
+- **Evento `senda:storage` emitido solo si hay cambios.** Detalle importante: emitir siempre causaría que los hooks `useTickets` y `useAlerts` se revalidaran al montar aunque no hubiese nada que purgar, provocando un repintado innecesario de `/admin`, `/security`, `/maintenance` y `/stats`. El test `no emite cuando no se han modificado datos` fija este comportamiento.
+- **Purga basada en `createdAt` / `triggeredAt`, no en alguna versión persistida.** Se eligió así por simplicidad: el dato de antigüedad ya vive en el propio ticket/alerta. Excepción del ERS ("salvo cuando la ruta tiene una incidencia asociada") no implementada en prototipo — los tickets no están enlazados a rutas concretas aquí.
+- **`unstubGlobals: true` en `vitest.config.ts`.** Resetea `vi.stubGlobal` entre tests para evitar fugas del mock de `localStorage`. Redundante con los `afterEach(() => vi.unstubAllGlobals())` de cada suite, pero actúa como cinturón + tirantes.
+- **Tests de `tickets` y `alerts` usan `vi.useFakeTimers` únicamente para el caso de ordenación,** donde hace falta tiempo determinístico. El resto usa `Date.now()` real; no hay beneficio en congelar el reloj cuando solo verificamos que `createdAt` está entre `before` y `after`.
+- **Umbral de tolerancia ±2 s en `buildTripTrack.test.ts`.** Absorbe el `Math.ceil` interno del servicio, consistente con el comportamiento real del tick simulado (iter 3).
+- **Prioridad de anomalías fijada por test: deviation > pause.** La regla ya estaba en el código desde iter 3; ahora queda expresada explícitamente en `monitoring.test.ts`. Es una decisión de diseño del dominio: si alguien se sale de la ruta *y* lleva parada, lo urgente es el desvío.
+- **Sin dependencia adicional de testing libraries.** Ni React Testing Library, ni MSW, ni Jest. Los servicios cubiertos son puros o mockeables con `vi.stubGlobal`. Los componentes no se testean en esta iteración por alcance. Decisión consciente para mantener simplicidad en el prototipo.
+- **Rejilla 2×2 → lista vertical en `RoleLoginPanel`.** Ver "Correcciones aplicadas" para la justificación completa.
+
+**Pendiente (post-iteración 5):**
+
+- **Tests de componentes con React Testing Library** para `RoleGuard`, `PrealertModal`, `IncidentReportModal` y las tablas de tickets/alertas.
+- **Unificación de tipos `triggeredAt`.** `AlertPayload` (iter 3) a `number` como `AlertRecord` (iter 4).
+- **Code-splitting** con `React.lazy` para bajar el bundle de 564 kB.
+- **Iconos PWA para iOS** (`apple-touch-icon`), pendiente desde la iteración 1.
+- **Focus trap estricto** en los modales (actualmente foco inicial + Escape).
+- **Reverse-geocode con throttling global** para evitar picos en Nominatim si el uso sube.
+- **Sustitución de `services/*.ts` por clientes HTTP** cuando exista backend, manteniendo los hooks `useTickets` / `useAlerts` / `useRoutePlanner` / `useTripRuntime` como fachada pública estable.
+- **RF-40 (agrupación automática de tickets cercanos), RF-39 (ajuste del ISP por incidencia)** y **filtros avanzados en `/stats`** requerirían backend compartido para aportar valor real.
+
+---
+
+## Estado final del prototipo
+
+**Requisitos cubiertos (total o parcialmente):**
+
+- **Autenticación y roles:** RF-01 (mocked), RNF-14, RNF-30.
+- **Solicitud y cálculo de ruta:** RF-02, RF-03, RF-04, RF-05, RF-06 (mocked), RF-13, RF-14, RF-15, RNF-11, RNF-23.
+- **Modo «Voy contigo»:** RF-19, RF-20, RF-21, RF-22, RF-23, RF-24, RF-25, RF-26, RF-27, RF-28, RF-29, RF-30, RF-31, RF-32, RF-33.
+- **Incidencias y gestión:** RF-37, RF-38, RF-41, RF-42, RF-43, RF-44, RF-45, RF-46, RF-47.
+- **Perfil:** RF-48, RF-49, RF-50.
+- **Estadísticas:** RF-51, RF-52 (agregadas localmente, alcance limitado).
+- **Usabilidad, idioma, accesibilidad:** RNF-09 (controles ≥44 px), RNF-10 (ES/EN), RNF-17 parcial (PWA instalable, sin builds nativos), RNF-20 (identidad URJC), RNF-21 (stack Open Source).
+- **Datos y privacidad:** RNF-18 (retención 24 h en `localStorage`), RNF-29 (agregados sin exposición individualizada en la UI).
+- **Casos de uso:** CU-01, CU-02, CU-03, CU-04, CU-06, CU-07, CU-08, CU-09, CU-10, CU-11, CU-12, CU-13, CU-18, CU-19, CU-20 (parcial), CU-21, CU-22, CU-23, CU-24.
+
+**Requisitos intencionadamente fuera del alcance del prototipo:**
+
+- **Integración real con LumenSmart:** RF-08 a RF-12, RF-16, RF-17, RF-18, RNF-01 a RNF-07, RNF-13, RNF-25, RNF-26, RNF-27. Requiere backend y proveedor real; el ISP queda aleatorio.
+- **Emparejamiento completo de voluntariado:** RF-34, RF-35, RF-36. El prototipo permite registrarse y ser elegible, pero no hay buzón compartido entre dispositivos.
+- **Agrupación automática de incidencias (RF-40)** y **ajuste dinámico del ISP (RF-39)**.
+- **Estándares legales, cifrado, disponibilidad 24/7, redundancia:** RNF-22, RNF-24, RNF-26, RNF-27, RNF-28. Son requisitos de operación / producción.
+- **iOS nativo:** se entrega PWA instalable; empaquetado nativo queda fuera.
+- **CU-05, CU-14 a CU-17** y estadísticas avanzadas con filtros.
+
+**Métricas del prototipo al cierre de la iteración 5:**
+
+- **Líneas de código** (aprox.): 5800 TypeScript/TSX + 1200 i18n JSON + 170 CSS.
+- **Ficheros TypeScript/TSX:** ~55 (tipos, servicios, hooks, componentes, páginas).
+- **Tests automatizados:** 7 suites, 44 tests, ejecución ~3,4 s.
+- **Bundle de producción:** 564 kB sin gzip, 167 kB con gzip.
+- **Dependencias instaladas:** 47 directas (19 runtime + 28 dev).
+- **Commits en el repositorio:** cinco commits principales (uno por iteración).
+
+**Resumen de avisos correctivos acumulados:**
+
+1. **Aviso 1 (iter 1):** no usar `: JSX.Element` como tipo de retorno en componentes funcionales con React 19.
+2. **Aviso 2 (iter 1):** generar siempre el contenido real de los ficheros placeholder o advertir explícitamente de que hay que crearlos a mano.
+3. **Aviso 3 (iter 2):** altura explícita en los contenedores de mapa en breakpoints pequeños, tipado explícito de callbacks con `strict: true`, ERS es v8.0 no v7.0.
+4. **Aviso 4 (iter 3):** en iteraciones grandes, incluir todos los ficheros fundacionales (tipos, servicios, hooks) antes de volcar los componentes; nunca asumir que los demás están resueltos.
+5. **Aviso 5 (iter 4):** los códigos RF-XX, RNF-XX y CU-XX no deben aparecer en cadenas i18n ni en cualquier otro texto visible por el usuario final. La trazabilidad con el ERS vive solo en este `seguimiento_ia.md` y en comentarios de código.
+
+Con esto se cierra la serie de iteraciones del prototipo evolutivo de Senda URJC.
