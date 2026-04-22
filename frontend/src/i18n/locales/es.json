@@ -1,0 +1,31 @@
+{
+  "app": {
+    "title": "Senda URJC",
+    "tagline": "Rutas seguras por los campus de la URJC"
+  },
+  "nav": {
+    "home": "Inicio",
+    "requestRoute": "Solicitar ruta",
+    "logout": "Cerrar sesión"
+  },
+  "login": {
+    "heading": "Inicia sesión",
+    "description": "Accede con tus credenciales institucionales de la URJC.",
+    "button": "Iniciar sesión con SSO URJC",
+    "loading": "Autenticando…",
+    "mockNotice": "Prototipo académico: SSO simulado en local."
+  },
+  "home": {
+    "welcome": "Hola, {{name}}",
+    "mapLabel": "Mapa del campus",
+    "cta": "Solicitar una ruta"
+  },
+  "route": {
+    "heading": "Solicitar una ruta",
+    "placeholder": "La selección de origen y destino se implementará en la siguiente iteración.",
+    "backHome": "Volver al inicio"
+  },
+  "language": {
+    "switchTo": "Cambiar idioma"
+  }
+}

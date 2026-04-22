@@ -1,0 +1,31 @@
+{
+  "app": {
+    "title": "Senda URJC",
+    "tagline": "Safe routes across URJC campuses"
+  },
+  "nav": {
+    "home": "Home",
+    "requestRoute": "Request route",
+    "logout": "Sign out"
+  },
+  "login": {
+    "heading": "Sign in",
+    "description": "Sign in with your URJC institutional credentials.",
+    "button": "Sign in with URJC SSO",
+    "loading": "Signing in…",
+    "mockNotice": "Academic prototype: SSO mocked locally."
+  },
+  "home": {
+    "welcome": "Hi, {{name}}",
+    "mapLabel": "Campus map",
+    "cta": "Request a route"
+  },
+  "route": {
+    "heading": "Request a route",
+    "placeholder": "Origin and destination selection will ship in the next iteration.",
+    "backHome": "Back to home"
+  },
+  "language": {
+    "switchTo": "Change language"
+  }
+}

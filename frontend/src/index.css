@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Leaflet baseline: map containers need explicit height. */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+}
+
+/* Global focus styles — accessibility (RNF-08). */
+@layer base {
+  :focus-visible {
+    outline: 2px solid #c00000;
+    outline-offset: 2px;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    font-family:
+      system-ui,
+      -apple-system,
+      "Segoe UI",
+      Roboto,
+      sans-serif;
+  }
+}
